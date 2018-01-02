@@ -1,7 +1,3 @@
-
-
-
-
 local debugMode = false
 local stableMemory = true
 local paused = false
@@ -102,25 +98,34 @@ local function update(dt)
 end
 
 function love.update(dt)
-	if debugMode and stableMemory then
-		collectgarbage()
+   local frameStartTime = love.timer.getTime()
+   local newDT = dt + love.timer.getTime() - frameStartTime
+
+   while newDT < SPEED_PER_FRAME do
+      print(newDT, SPEED_PER_FRAME)
+      newDT = dt + love.timer.getTime() - frameStartTime
    end
 
 	if not paused then
       frame = frame + 1
 
-      local remainingTime = dt
+      local remainingTime = newDT
 
       while remainingTime > 0 do
          if remainingTime > SPEED_PER_FRAME then
             update(SPEED_PER_FRAME)
-            remainingTime = remainingTime - dt
+            remainingTime = remainingTime - SPEED_PER_FRAME
          else
             update(remainingTime)
             remainingTime = 0
          end
       end
-	end
+   end
+
+	if debugMode and stableMemory then
+		collectgarbage()
+   end
+   print(love.timer.getFPS())
 end
 
 function love.focus(focused)
