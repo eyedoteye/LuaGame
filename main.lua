@@ -102,7 +102,7 @@ function love.update(dt)
    local newDT = dt + love.timer.getTime() - frameStartTime
 
    while newDT < SPEED_PER_FRAME do
-      print(newDT, SPEED_PER_FRAME)
+   --   print(newDT, SPEED_PER_FRAME)
       newDT = dt + love.timer.getTime() - frameStartTime
    end
 

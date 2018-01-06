@@ -24,11 +24,11 @@ local collisionSystem = {
 
 -- entity ids are random floats
 
--- table: EntityTypeComponent
+--- table: EntityTypeComponent
 -- name: EntityType
 -- string: type
 
--- table: PositionComponent
+--- table: PositionComponent
 -- name: Position
 -- number: x
 -- number: y
