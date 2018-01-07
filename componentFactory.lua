@@ -41,6 +41,14 @@ local componentFactory ={
             soundName = properties.soundName
          }
          return component
+      end,
+
+      ["FinishedCallback"] = function(properties)
+         local component = {
+            name = "FinishedCallback",
+            callback = properties.callback
+         }
+         return component
       end
    }
 }

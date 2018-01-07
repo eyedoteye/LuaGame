@@ -7,11 +7,13 @@ local frame = 0
 
 local inputSystem = require "inputSystem"
 local collisionSystem = require "collisionSystem"
-local soundController = require "soundSystem"
+local soundSystem = require "soundSystem"
+local soundController = require "soundController"
 
 local systems = {
    inputSystem = inputSystem,
    collisionSystem = collisionSystem,
+   soundSystem = soundSystem
 }
 
 local componentFactory = require "componentFactory"
@@ -52,7 +54,7 @@ collisionSystem:makeEntityMovableByEntity(entity2.entityTypeComponent, entity1.e
 function love.load()
    soundController:addSoundSource("tch.ogg", "tch")
    --soundController:playSound("tch")
-   print(inputSystem:getPlayerMode(1))
+   print(soundController.soundSystem.test .. "  " .. soundSystem.test)
 end
 
 function love.draw()
@@ -106,7 +108,7 @@ local function update(dt)
    end
 
    collisionSystem:collideAllEntities()
-   soundController.soundSystem:update()
+   soundSystem:update()
 end
 
 function love.update(dt)
