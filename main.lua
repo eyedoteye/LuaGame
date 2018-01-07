@@ -7,6 +7,7 @@ local frame = 0
 
 local inputSystem = require "inputSystem"
 local collisionSystem = require "collisionSystem"
+local soundController = require "soundSystem"
 
 local systems = {
    inputSystem = inputSystem,
@@ -49,6 +50,9 @@ collisionSystem:makeEntitiesCollidable(entity1.entityTypeComponent, entity2.enti
 collisionSystem:makeEntityMovableByEntity(entity2.entityTypeComponent, entity1.entityTypeComponent)
 
 function love.load()
+   soundController:addSoundSource("tch.ogg", "tch")
+   --soundController:playSound("tch")
+   print(inputSystem:getPlayerMode(1))
 end
 
 function love.draw()
@@ -94,7 +98,15 @@ local function update(dt)
    entity1.positionComponent.x = entity1.positionComponent.x + x * speed * dt
    entity1.positionComponent.y = entity1.positionComponent.y + y * speed * dt
 
+   if inputSystem:isDown(1, "leftclick") then
+      soundController:playSoundAttachedToPositionComponent(
+         "tch",
+         entity1.positionComponent
+      )
+   end
+
    collisionSystem:collideAllEntities()
+   soundController.soundSystem:update()
 end
 
 function love.update(dt)
@@ -125,7 +137,7 @@ function love.update(dt)
 	if debugMode and stableMemory then
 		collectgarbage()
    end
-   print(love.timer.getFPS())
+   --print(love.timer.getFPS())
 end
 
 function love.focus(focused)

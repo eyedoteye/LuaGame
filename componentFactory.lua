@@ -32,6 +32,15 @@ local componentFactory ={
             length = properties.length
          }
          return component
+      end,
+
+      ["SoundEffect"] = function(properties)
+         local component = {
+            name = "SoundEffect",
+            source = properties.source,
+            soundName = properties.soundName
+         }
+         return component
       end
    }
 }
