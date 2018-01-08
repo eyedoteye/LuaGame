@@ -54,7 +54,6 @@ collisionSystem:makeEntityMovableByEntity(entity2.entityTypeComponent, entity1.e
 function love.load()
    soundController:addSoundSource("tch.ogg", "tch")
    --soundController:playSound("tch")
-   print(soundController.soundSystem.test .. "  " .. soundSystem.test)
 end
 
 function love.draw()

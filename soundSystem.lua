@@ -1,10 +1,5 @@
 local entityFactory = require "entityFactory"
-
-local function clearTable(table)
-   for key in pairs(table) do
-      table[key] = nil
-   end
-end
+local clearTable = require "clearTable"
 
 
 
@@ -19,12 +14,11 @@ local soundSystem = {
    soundEntities = {},
    soundEntitiesSize = 0,
    soundEntityIDToIndex = {},
-   test = math.random()
 }
 
 --- table: SoundEffectComponent
 -- name: SoundEffect
--- table [Source]: source
+-- userdata [Source]: source
 -- table: information
 
 --- table: PositionComponent

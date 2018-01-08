@@ -1,12 +1,10 @@
+local clearTable = require "clearTable"
+
+
+
 -- TODO: Add support for joystick devices (unrecognized as gamepad)
 -- TODO: Add support for keyboard input
 -- TODO: Add support for mouse input
-
-local function clearTable(table)
-   for key in pairs(table) do
-      table[key] = nil
-   end
-end
 
 local input = {
    players = {},
