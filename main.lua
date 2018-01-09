@@ -9,6 +9,8 @@ local inputSystem = require "inputSystem"
 local collisionSystem = require "collisionSystem"
 local soundSystem = require "soundSystem"
 local soundController = require "soundController"
+local spriteSystem = require "spriteSystem"
+local spriteController = require "spriteController"
 
 local systems = {
    inputSystem = inputSystem,
@@ -51,9 +53,26 @@ collisionSystem:addCollisionEntity(
 collisionSystem:makeEntitiesCollidable(entity1.entityTypeComponent, entity2.entityTypeComponent)
 collisionSystem:makeEntityMovableByEntity(entity2.entityTypeComponent, entity1.entityTypeComponent)
 
+rPrint = require "rPrint"
 function love.load()
    soundController:addSoundSource("tch.ogg", "tch")
+   spriteController:addTexture("spritesheet.png", "airplaine")
+   spriteController:addQuadToTexture(
+      "airplaine",
+      "idle",
+      0, 0,
+      32, 32)
+   local spriteComponent = spriteController:getSpriteComponentWithSprite(
+      "airplaine",
+      "idle"
+   )
+
+   rPrint(spriteComponent, nil, "spriteComponent")
    --soundController:playSound("tch")
+   spriteSystem:addSpriteEntity(
+      spriteComponent,
+      entity1.positionComponent
+   )
 end
 
 function love.draw()
@@ -65,7 +84,7 @@ function love.draw()
 		love.graphics.setColor(255, 255, 255)
    end
 
-   love.graphics.setColor(0, 255, 0, 255)
+   love.graphics.setColor(0, 255, 0, 255 * 0.8)
    love.graphics.circle(
       "fill",
       entity1.positionComponent.x, entity1.positionComponent.y,
@@ -76,6 +95,9 @@ function love.draw()
       entity2.positionComponent.x, entity2.positionComponent.y,
       entity2.colliderComponent.radius,
       32)
+
+   love.graphics.setColor(255, 255, 255, 255)
+   spriteSystem:draw()
 end
 
 local function update(dt)

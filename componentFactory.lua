@@ -49,6 +49,17 @@ local componentFactory ={
             callback = properties.callback
          }
          return component
+      end,
+
+      ["Sprite"] = function(properties)
+         local component = {
+            name = "Sprite",
+            textureName = properties.textureName,
+            quadName = properties.quadName,
+            texture = properties.texture,
+            quad = properties.quad
+         }
+         return component
       end
    }
 }
