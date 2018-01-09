@@ -60,6 +60,15 @@ local componentFactory ={
             quad = properties.quad
          }
          return component
+      end,
+
+      ["PositionOffset"] = function(properties)
+         local component = {
+            name = "PositionOffset",
+            x = properties.x,
+            y = properties.y
+         }
+         return component
       end
    }
 }

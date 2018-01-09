@@ -69,9 +69,18 @@ function love.load()
 
    rPrint(spriteComponent, nil, "spriteComponent")
    --soundController:playSound("tch")
+   local x,y,w,h = spriteComponent.quad:getViewport()
+   local positionOffsetComponent = componentFactory:createComponent(
+      "PositionOffset",
+      {
+         x = -w / 2,
+         y = -h / 2
+      }
+   )
    spriteSystem:addSpriteEntity(
       spriteComponent,
-      entity1.positionComponent
+      entity1.positionComponent,
+      positionOffsetComponent
    )
 end
 
