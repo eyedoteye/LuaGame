@@ -83,6 +83,9 @@ local function render(
       yOffset = positionOffsetComponent.y
    end
 
+   -- Intentional mutation of non-standard global variable 'love'
+   -- Implementation of love2d v0.10.2 api:
+   --    https://love2d.org/w/index.php?title=love.graphics.draw&oldid=20895
    love.graphics.draw(
       spriteComponent.texture,
       spriteComponent.quad,
