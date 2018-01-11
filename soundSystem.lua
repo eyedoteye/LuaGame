@@ -52,10 +52,12 @@ function soundSystem.addSoundEntity(
 end
 
 function soundSystem.removeSoundEntity(self, id)
-   local entity = self.entityMap:get(id)
+   local entity = self.entityMap:get(i)
    clearTable(entity)
    self.entityMap:remove(id)
 end
+
+
 
 
 --- Performs updates needed for maintaining sound system.

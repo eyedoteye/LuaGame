@@ -54,6 +54,7 @@ collisionSystem:makeEntitiesCollidable(entity1.entityTypeComponent, entity2.enti
 collisionSystem:makeEntityMovableByEntity(entity2.entityTypeComponent, entity1.entityTypeComponent)
 
 rPrint = require "rPrint"
+local spriteID = nil
 function love.load()
    soundController:addSoundSource("tch.ogg", "tch")
    spriteController:addTexture("spritesheet.png", "airplaine")
@@ -62,14 +63,12 @@ function love.load()
       "idle",
       0, 0,
       32, 32)
+
    local spriteComponent = spriteController:getSpriteComponentWithSprite(
       "airplaine",
       "idle"
    )
-
-   rPrint(spriteComponent, nil, "spriteComponent")
-   --soundController:playSound("tch")
-   local x,y,w,h = spriteComponent.quad:getViewport()
+   local _, _, w, h = spriteComponent.quad:getViewport()
    local positionOffsetComponent = componentFactory:createComponent(
       "PositionOffset",
       {
@@ -77,7 +76,8 @@ function love.load()
          y = -h / 2
       }
    )
-   spriteSystem:addSpriteEntity(
+
+   spriteID = spriteSystem:addSpriteEntity(
       spriteComponent,
       entity1.positionComponent,
       positionOffsetComponent
@@ -135,6 +135,32 @@ local function update(dt)
          "tch",
          entity1.positionComponent
       )
+   end
+
+   if inputController:isDown(1, "rightclick") then
+      if spriteSystem:hasSpriteEntity(spriteID) then
+         spriteSystem:removeSpriteEntity(spriteID)
+      else
+         print("none")
+--         local spriteComponent = spriteController:getSpriteComponentWithSprite(
+--            "airplaine",
+--            "idle"
+--         )
+--         local _, _, w, h = spriteComponent.quad:getViewport()
+--         local positionOffsetComponent = componentFactory:createComponent(
+--            "PositionOffset",
+--            {
+--               x = -w / 2,
+--               y = -h / 2
+--            }
+--         )
+--
+--         spriteID = spriteSystem:addSpriteEntity(
+--            spriteComponent,
+--            entity1.positionComponent,
+--            positionOffsetComponent
+--         )
+      end
    end
 
    collisionSystem:collideAllEntities()

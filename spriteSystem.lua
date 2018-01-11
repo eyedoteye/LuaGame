@@ -1,9 +1,9 @@
 local entityFactory = require "entityFactory"
+local entityMapFactory = require "entityMapFactory"
+local clearTable = require "clearTable"
 
 local spriteSystem = {
-   spriteEntities = {},
-   spriteEntitiesSize = 0,
-   spriteEntityIDToIndex = {}
+   entityMap = entityMapFactory:create()
 }
 
 
@@ -24,12 +24,19 @@ function spriteSystem.addSpriteEntity(
       positionOffsetComponent = positionOffsetComponent
    })
 
-   local index = self.spriteEntitiesSize + 1
-   self.spriteEntities[index] = entity
-   self.spriteEntitiesSize = self.spriteEntitiesSize + 1
-   self.spriteEntityIDToIndex[entity.id] = index
+   self.entityMap:add(entity)
 
    return entity.id
+end
+
+function spriteSystem.removeSpriteEntity(self, id)
+   local entity = self.entityMap:get(id)
+   clearTable(entity)
+   self.entityMap:remove(id)
+end
+
+function spriteSystem.hasSpriteEntity(self, id)
+   return self.entityMap:get(id) ~= nil
 end
 
 local function render(
@@ -52,7 +59,7 @@ local function render(
 end
 
 function spriteSystem.draw(self)
-   for _, spriteEntity in ipairs(self.spriteEntities) do
+   for _, spriteEntity in self.entityMap:getPairs() do
       render(
          spriteEntity.spriteComponent,
          spriteEntity.positionComponent,
