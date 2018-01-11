@@ -1,3 +1,5 @@
+local entityFactory = require "entityFactory"
+
 --[[function rPrint(s, l, i) -- recursive Print (structure, limit, indent)
 	l = (l) or 100; i = i or "";	-- default item limit, indent string
 	if (l<1) then print "ERROR: Item limit reached."; return l-1 end;
@@ -58,12 +60,11 @@ function collisionSystem.addCollisionEntity(
    positionComponent,
    colliderComponent
 )
-   local entity = {
-      id = math.random(),
+   local entity = entityFactory:createEntity({
       entityTypeComponent = entityTypeComponent,
       positionComponent = positionComponent,
       colliderComponent = colliderComponent,
-   }
+   })
 
    self.collisionEntities[self.collisionEntitiesSize + 1] = entity
    self.collisionEntitiesSize = self.collisionEntitiesSize + 1
