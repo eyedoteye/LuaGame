@@ -66,7 +66,7 @@ end
 --- Performs updates needed for maintaining sound system.
 -- Updates position of all love2d Sources.
 function soundSystem.update(self)
-   for _, soundEntity in self.entityMap:getPairs() do
+   for _, soundEntity in ipairs(self.entityMap:getList()) do
       local position = soundEntity.positionComponent
       if position ~= nil then
          soundEntity.soundEffectComponent.source:setPosition(position.x, position.y)

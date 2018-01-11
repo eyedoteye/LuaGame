@@ -12,10 +12,6 @@ local function entityMap_get(self, id)
    return self.entities[index]
 end
 
-local function entityMap_getPairs(self)
-   return ipairs(self.entities)
-end
-
 --- Gets all entities in map as an indexed list.
 -- @return list: An indexed list containting all entities in the map.
 local function entityMap_getList(self)
@@ -67,7 +63,6 @@ function entityMapFactory.create(self)
       idToIndex = {},
 
       get = entityMap_get,
-      getPairs = entityMap_getPairs,
       getList = entityMap_getList,
       getSize = entityMap_getSize,
       add = entityMap_add,

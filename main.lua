@@ -138,10 +138,10 @@ local function update(dt)
    end
 
    if inputController:isDown(1, "rightclick") then
-      --if spriteSystem:hasSpriteEntity(spriteID) then
+      if spriteSystem:hasSpriteEntity(spriteID) then
          spriteSystem:removeSpriteEntity(spriteID)
-      --else
-      --   print("none")
+      else
+         print("none")
 --         local spriteComponent = spriteController:getSpriteComponentWithSprite(
 --            "airplaine",
 --            "idle"
@@ -160,7 +160,7 @@ local function update(dt)
 --            entity1.positionComponent,
 --            positionOffsetComponent
 --         )
-      --end
+      end
    end
 
    collisionSystem:collideAllEntities()

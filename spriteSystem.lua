@@ -62,7 +62,7 @@ local function render(
 end
 
 function spriteSystem.draw(self)
-   for _, spriteEntity in self.entityMap:getPairs() do
+   for _, spriteEntity in ipairs(self.entityMap:getList()) do
       render(
          spriteEntity.spriteComponent,
          spriteEntity.positionComponent,
