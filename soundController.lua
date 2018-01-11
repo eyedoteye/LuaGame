@@ -1,6 +1,6 @@
 local componentFactory = require "componentFactory"
 local soundSystem = require "soundSystem"
-local sourcePool = require "sourcePool"
+local sourcePoolFactory = require "sourcePoolFactory"
 local clearTable = require "clearTable"
 
 
@@ -12,14 +12,15 @@ local soundController = {
 
 -- TODO: Move sourcePool closer to asset manager.
 local function getSoundSource(soundName)
-   return sourcePool:get(soundController.soundSources[soundName])
+   return soundController.soundSources[soundName]:get()
 end
 
 local function repoolFinishedSound(soundEntity)
    print("soundEffect: " .. soundEntity.soundEffectComponent.soundName .. " has stopped.")
 
    local pool = soundController.soundSources[soundEntity.soundEffectComponent.soundName]
-   sourcePool:returnSource(pool, soundEntity.soundEffectComponent.source)
+   pool:returnSource(soundEntity.soundEffectComponent.source)
+
    clearTable(soundEntity.soundEffectComponent)
    clearTable(soundEntity.finishedCallbackComponent)
    soundController.soundSystem:removeSoundEntity(soundEntity.id)
@@ -32,7 +33,7 @@ function soundController.addSoundSource(self, soundFilePath, soundName)
       -- Implementation of love2d v0.10.2 api:
       --    https://love2d.org/w/index.php?title=love.audio.newSource&oldid=15872
       local source = love.audio.newSource(soundFilePath, "static")
-      self.soundSources[soundName] = sourcePool:create(source)
+      self.soundSources[soundName] = sourcePoolFactory:create(source)
    end
 end
 

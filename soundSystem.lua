@@ -1,5 +1,5 @@
 local entityFactory = require "entityFactory"
-local entityListFactory = require "entityList"
+local entityMapFactory = require "entityMapFactory"
 local clearTable = require "clearTable"
 
 
@@ -11,7 +11,7 @@ local clearTable = require "clearTable"
 --}
 
 local soundSystem = {
-   entityList = entityListFactory:create()
+   entityMap = entityMapFactory:create()
 }
 
 --- table: SoundEffectComponent
@@ -46,22 +46,22 @@ function soundSystem.addSoundEntity(
       finishedCallbackComponent = finishedCallbackComponent
    })
 
-   self.entityList:add(entity)
+   self.entityMap:add(entity)
 
    return entity.id
 end
 
 function soundSystem.removeSoundEntity(self, id)
-   local entity = self.entityList:get(id)
+   local entity = self.entityMap:get(id)
    clearTable(entity)
-   self.entityList:remove(id)
+   self.entityMap:remove(id)
 end
 
 
 --- Performs updates needed for maintaining sound system.
 -- Updates position of all love2d Sources.
 function soundSystem.update(self)
-   for _, soundEntity in self.entityList:getPairs() do
+   for _, soundEntity in self.entityMap:getPairs() do
       local position = soundEntity.positionComponent
       if position ~= nil then
          soundEntity.soundEffectComponent.source:setPosition(position.x, position.y)

@@ -1,5 +1,5 @@
-local entityList = {}
-local function entityList_get(self, id)
+local entityMapFactory = {}
+local function entityMap_get(self, id)
    local index = self.idToIndex[id]
    if index == nil then
       return nil
@@ -8,18 +8,18 @@ local function entityList_get(self, id)
    return self.entities[index]
 end
 
-local function entityList_getPairs(self)
+local function entityMap_getPairs(self)
    return ipairs(self.entities)
 end
 
-local function entityList_add(self, entity)
+local function entityMap_add(self, entity)
    local index = self.size + 1
    self.entities[index] = entity
    self.size = self.size + 1
    self.idToIndex[entity.id] = index
 end
 
-local function entityList_remove(self, id)
+local function entityMap_remove(self, id)
    local index = self.idToIndex[id]
 
    if self.size > 1 and index ~= self.size then
@@ -37,18 +37,18 @@ local function entityList_remove(self, id)
    self.size = self.size - 1
 end
 
-function entityList.create(self)
+function entityMapFactory.create(self)
    local list = {
       entities = {},
       size = 0,
       idToIndex = {},
 
-      get = entityList_get,
-      getPairs = entityList_getPairs,
-      add = entityList_add,
-      remove = entityList_remove
+      get = entityMap_get,
+      getPairs = entityMap_getPairs,
+      add = entityMap_add,
+      remove = entityMap_remove
    }
    return list
 end
 
-return entityList
+return entityMapFactory
