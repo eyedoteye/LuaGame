@@ -197,7 +197,7 @@ end
 --          float: y
 --       float: distanceBetweenCenters
 --       float: displacementDistance
-local function collideEntities(collisionSystem, firstEntity, secondEntity)
+local function collideEntities(firstEntity, secondEntity)
    if firstEntity.colliderComponent.name == "Collider.Circle" then
       if secondEntity.colliderComponent.name == "Collider.Circle" then
          local isColliding, collisionData = areCirclesColliding(
@@ -254,7 +254,7 @@ local function collideEntities(collisionSystem, firstEntity, secondEntity)
 end
 
 --- Collides all collision entities with each other and resolves their collisions.
-function collisionSystem.collideAllEntities(self)
+local function collideAllEntities(self)
 	local collisions = {}
 
    local size = self.entityMap:getSize()
@@ -273,7 +273,7 @@ function collisionSystem.collideAllEntities(self)
          if collisionEntity2 == nil then
             print("collisionEntity2 == nil   i = " .. i .. "   ii = " .. ii)
          end
-         local isColliding, collisionData = collideEntities(collisionSystem, collisionEntity1, collisionEntity2)
+         local isColliding, collisionData = collideEntities(collisionEntity1, collisionEntity2)
 
          if isColliding then
             table.insert(collisions, {collisionEntity1, collisionEntity2, collisionData})
@@ -292,6 +292,12 @@ function collisionSystem.collideAllEntities(self)
 		collisionPair[2]:onCollision(collisionPair[1], collisionPair[3])
    end
    ]]--
+end
+
+--- Performs updates needed for mainting collision system.
+-- Collides all collision entities with each other and resolves their collisions.:w
+function collisionSystem.update(self)
+   collideAllEntities(self)
 end
 
 return collisionSystem

@@ -163,7 +163,7 @@ local function update(dt)
       end
    end
 
-   collisionSystem:collideAllEntities()
+   collisionSystem:update()
    soundSystem:update()
 end
 
