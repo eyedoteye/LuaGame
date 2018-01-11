@@ -12,6 +12,14 @@ local function entityMap_getPairs(self)
    return ipairs(self.entities)
 end
 
+local function entityMap_getList(self)
+   return self.entities
+end
+
+local function entityMap_getSize(self)
+   return self.size
+end
+
 local function entityMap_add(self, entity)
    local index = self.size + 1
    self.entities[index] = entity
@@ -45,6 +53,8 @@ function entityMapFactory.create(self)
 
       get = entityMap_get,
       getPairs = entityMap_getPairs,
+      getList = entityMap_getList,
+      getSize = entityMap_getSize,
       add = entityMap_add,
       remove = entityMap_remove
    }

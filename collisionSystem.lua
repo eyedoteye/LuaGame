@@ -1,27 +1,19 @@
 local entityFactory = require "entityFactory"
-
---[[function rPrint(s, l, i) -- recursive Print (structure, limit, indent)
-	l = (l) or 100; i = i or "";	-- default item limit, indent string
-	if (l<1) then print "ERROR: Item limit reached."; return l-1 end;
-	local ts = type(s);
-	if (ts ~= "table") then print (i,ts,s); return l-1 end
-	print (i,ts);           -- print "table"
-	for k,v in pairs(s) do  -- print "[KEY] VALUE"
-		l = rPrint(v, l, i.."\t["..tostring(k).."]");
-		if (l < 0) then break end
-	end
-	return l
-end]]
+local entityMapFactory = require "entityMapFactory"
+local clearTable = require "clearTable"
 
 
+--- Collision Entity
+-- (number: id) -- Automatically added by entityFactory
+-- table: entityTypeComponent
+-- table: positionComponent
+-- table: colliderComponent
 
 local collisionSystem = {
    collidableMap = {}, -- table[string][string] bool : Maps collidable entity types.
    movableMap = {}, -- table[string][string] bool : Maps movable entity types to their respective mover entity types.
 
-   collisionEntities = {}, -- list: Contains all instantiated components that react witihin the collision system.
-   collisionEntitiesSize = 0, -- number: Number of instantiated components within collisionEntities.
-   collisionEntityIDToIndex = {} -- hashmap: Maps collision entity id to index within collisionEntities.
+   entityMap = entityMapFactory:create()
 }
 
 -- entity ids are random floats
@@ -66,23 +58,15 @@ function collisionSystem.addCollisionEntity(
       colliderComponent = colliderComponent,
    })
 
-   self.collisionEntities[self.collisionEntitiesSize + 1] = entity
-   self.collisionEntitiesSize = self.collisionEntitiesSize + 1
+   self.entityMap:add(entity)
 
    return entity.id
 end
 
 function collisionSystem.removeCollisionEntity(self, id)
-   local index = self.collisionEntityIDToIndex[id]
-
-   local replacementEntity = self.collisionEntities[self.collisionEntitiesSize]
-   self.collisionEntityIDToIndex[replacementEntity.id] = index
-   self.collisionEntities[index] = replacementEntity
-
-   self.collisionEntities[self.collisionEntitiesSize] = nil
-   self.collisionEntityIDToIndex[id] = nil
-
-   self.collisionEntitiesSize = self.collisionEntitiesSize - 1
+   local entity = self.entityMap:get(id)
+   clearTable(entity)
+   self.entityMap:remove(id)
 end
 
 --- Turns on collision checking between two entity types.
@@ -253,12 +237,14 @@ end
 function collisionSystem.collideAllEntities(self)
 	local collisions = {}
 
+   local size = self.entityMap:getSize()
+   local entities = self.entityMap:getList()
 	local i = 1
-	while i <= self.collisionEntitiesSize do
+	while i <= size do
 		local ii = i + 1
-		while ii <= self.collisionEntitiesSize do
-			local collisionEntity1 = self.collisionEntities[i]
-			local collisionEntity2 = self.collisionEntities[ii]
+		while ii <= size do
+			local collisionEntity1 = entities[i]
+			local collisionEntity2 = entities[ii]
 
          --print("i = .. " .. i .. "   ii = " .. ii)
          if collisionEntity1 == nil then
