@@ -5,7 +5,7 @@ local SPEED_PER_FRAME = 1 / 60
 local frame = 0
 
 
-local inputSystem = require "inputSystem"
+local inputController = require "inputController"
 local collisionSystem = require "collisionSystem"
 local soundSystem = require "soundSystem"
 local soundController = require "soundController"
@@ -13,7 +13,7 @@ local spriteSystem = require "spriteSystem"
 local spriteController = require "spriteController"
 
 local systems = {
-   inputSystem = inputSystem,
+   inputController = inputController,
    collisionSystem = collisionSystem,
    soundSystem = soundSystem
 }
@@ -114,23 +114,23 @@ local function update(dt)
 
    local y = 0
    local x = 0
-   if inputSystem:isDown(1, "up") then
+   if inputController:isDown(1, "up") then
       y = y - 1
    end
-   if inputSystem:isDown(1, "down") then
+   if inputController:isDown(1, "down") then
       y = y + 1
    end
-   if inputSystem:isDown(1, "left") then
+   if inputController:isDown(1, "left") then
       x = x - 1
    end
-   if inputSystem:isDown(1, "right") then
+   if inputController:isDown(1, "right") then
       x = x + 1
    end
    local speed = 100
    entity1.positionComponent.x = entity1.positionComponent.x + x * speed * dt
    entity1.positionComponent.y = entity1.positionComponent.y + y * speed * dt
 
-   if inputSystem:isDown(1, "leftclick") then
+   if inputController:isDown(1, "leftclick") then
       soundController:playSoundAttachedToPositionComponent(
          "tch",
          entity1.positionComponent
