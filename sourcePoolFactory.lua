@@ -13,7 +13,7 @@ local function sourcePool_get(self)
    return source
 end
 
---- Returns a sound source back into the pool. 
+--- Returns a sound source back into the pool.
 -- @param source [userdata]: Love2D Source to return to pool.
 local function sourcePool_returnSource(self, source)
    self.sources[self.size + 1] = source
@@ -24,7 +24,7 @@ local function sourcePool_returnSource(self, source)
    end
 end
 --- Creates a source pool. Holds multiple clones of the same source.
--- @param source [userdata]
+-- @param source [userdata]: Love2D Source to instantiate the pool with.
 function sourcePoolFactory.create(self, source)
   local pool = {
      original = source,
