@@ -39,9 +39,9 @@ local collisionSystem = {
 }
 
 --- Adds a collision entity to the collision system.
--- @param entityTypeComponent: Entity type of entity.
--- @param positionComponent: Position of entity.
--- @param colliderComponent: Collider of entity.
+-- @param entityTypeComponent entityTypeComponent: Entity type of entity.
+-- @param positionComponent positionComponent: Position of entity.
+-- @param colliderComponent colliderComponent: Collider of entity.
 -- @return number: This system's ID of the collision entity.
 function collisionSystem.addCollisionEntity(
    self,
@@ -61,7 +61,7 @@ function collisionSystem.addCollisionEntity(
 end
 
 --- Removes a collision entity from the collision system.
--- @param id: This system's ID of the entity to remove.
+-- @param id string: This system's ID of the entity to remove.
 function collisionSystem.removeCollisionEntity(self, id)
    local entity = self.entityMap:get(id)
    if entity == nil then
@@ -92,7 +92,7 @@ end
 --- Returns if two entity types are collidable.
 -- @param firstEntityType entityTypeComponent: Type name of first entity.
 -- @param secondEntityType entityTypeComponent: Type name of the second entity.
--- @returns bool: Return true if firstEntityType and secondEntityType are collidable.
+-- @return bool: Return true if firstEntityType and secondEntityType are collidable.
 function collisionSystem.areEntitiesCollidable(self, firstEntityType, secondEntityType)
    if self.collidableMap[firstEntityType] == nil then
       return false
@@ -126,12 +126,12 @@ function collisionSystem.isEntityMovableByEntity(self, firstEntityType, secondEn
 end
 
 --- Checks if two circles are colliding.
--- @param x1: Position of the first circle along the x-axis.
--- @param y1: Position of the first circle along the y-axis.
--- @param r1: Radius of the first circle.
--- @param x2: Position of the second circle along the x-axis.
--- @param y2: Position of the second circle along the y-axis.
--- @param r2: Radius of the second circle.
+-- @param x1 number: Position of the first circle along the x-axis.
+-- @param y1 number: Position of the first circle along the y-axis.
+-- @param r1 number: Radius of the first circle.
+-- @param x2 number: Position of the second circle along the x-axis.
+-- @param y2 number: Position of the second circle along the y-axis.
+-- @param r2 number: Radius of the second circle.
 -- @return bool: True if the two entities are colliding.
 -- @return collisionData: Holds collision information between entities.
 --    table: collisionData
@@ -178,14 +178,8 @@ end
 
 -- TODO: Port this from tlz
 --- Collides two entities and resolves any needed position displacements.
--- @param firstEntity entity{
---    entityTypeComponent,
---    positionComponent,
---    colliderComponent}: First colliding entity.
--- @param secondEntity entity{
---    entityTypeComponent,
---    positionComponent,
---    colliderComponent}: Second colliding entity.
+-- @param firstEntity collisionEntity: First collisionEntity.
+-- @param secondEntity collisionEntity: Second collisionEntity.
 -- @return bool: True if the two entities are colliding.
 -- @return collisionData: Holds collision information between entities.
 --    table: collisionData
