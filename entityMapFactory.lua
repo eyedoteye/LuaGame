@@ -64,6 +64,7 @@ local function entityMap_remove(self, id)
    end
 
    self.idToIndex[id] = nil
+   entityFactory:relieveID(id)
 
    self.size = self.size - 1
 end
