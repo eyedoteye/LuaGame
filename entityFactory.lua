@@ -1,16 +1,16 @@
 local entityFactory = {
-   usedIdsSinceRuntimeStart = {}
+--   usedIdsSinceRuntimeStart = {}
 }
 
 function entityFactory.createEntity(self, entityComponents)
    local entity = entityComponents
    local id = tostring(math.random())
-   local collisions = 0
-   while collisions < 10 and self.usedIdsSinceRuntimeStart[id] ~= nil do
-      print("entityID collision: " .. id)
-      id = math.random()
-   end
-   self.usedIdsSinceRuntimeStart[id] = true
+--   local collisions = 0
+--   while collisions < 10 and self.usedIdsSinceRuntimeStart[id] ~= nil do
+--      print("entityID collision: " .. id)
+--      id = math.random()
+--   end
+--   self.usedIdsSinceRuntimeStart[id] = true
    entity.id = id
    return entity
 end
