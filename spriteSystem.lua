@@ -32,9 +32,10 @@ local spriteSystem = {
 }
 
 --- Adds a sprite entity to the sprite system.
--- @param spriteComponent: Sprite to display of the entity.
--- @param positionComponent: Position of the entity.
--- @param positionOffsetComponent: How much the sprite must be shifted from the entity's position when displayed.
+-- @param spriteComponent spriteComponent: Sprite to display of the entity.
+-- @param positionComponent positionComponent: Position of the entity.
+-- @param positionOffsetComponent positionOffsetComponent: How much the sprite must be shifted
+--                                                         from the entity's position when displayed.
 -- @return number: This system's ID of the sprite entity.
 function spriteSystem.addSpriteEntity(
    self,
@@ -54,7 +55,7 @@ function spriteSystem.addSpriteEntity(
 end
 
 --- Removes a sprite entity from the sprite system.
--- @param id: This system's ID of the entity to remove.
+-- @param id string: This system's ID of the entity to remove.
 function spriteSystem.removeSpriteEntity(self, id)
    local entity = self.entityMap:get(id)
    if entity == nil then
@@ -65,7 +66,7 @@ function spriteSystem.removeSpriteEntity(self, id)
 end
 
 --- Checks to see if a sprite entity exists within this system.
--- @param id: This system's ID of the entity to check for.
+-- @param id string: This system's ID of the entity to check for.
 -- @return bool: Whether the entity exists in this system or not.
 function spriteSystem.hasSpriteEntity(self, id)
    return self.entityMap:get(id) ~= nil
