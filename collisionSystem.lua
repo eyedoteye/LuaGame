@@ -3,20 +3,12 @@ local entityMapFactory = require "entityMapFactory"
 local clearTable = require "clearTable"
 
 
+
 --- Collision Entity
 -- (number: id) -- Automatically added by entityFactory
 -- table: entityTypeComponent
 -- table: positionComponent
 -- table: colliderComponent
-
-local collisionSystem = {
-   collidableMap = {}, -- table[string][string] bool : Maps collidable entity types.
-   movableMap = {}, -- table[string][string] bool : Maps movable entity types to their respective mover entity types.
-
-   entityMap = entityMapFactory:create()
-}
-
--- entity ids are random floats
 
 --- table: EntityTypeComponent
 -- name: EntityType
@@ -39,12 +31,18 @@ local collisionSystem = {
 --       float: radius
 --       float: length
 
--- TODO:
+local collisionSystem = {
+   collidableMap = {}, -- table[string][string] bool: Maps collidable entity types.
+   movableMap = {}, -- table[string][string] bool: Maps movable entity types to their respective mover entity types.
+
+   entityMap = entityMapFactory:create() -- entityMap: Stores all collision entities.
+}
+
 --- Adds a collision entity to the collision system.
 -- Collision entity {id, entityTypeComponent, positionComponent, colliderComponent}
--- @param entityTypeComponent[string]: Entity type of first colliding entity.
--- @param positionComponent[table]: Position of first colliding entity.
--- @param colliderComponent[table]: Collider of first colliding entity.
+-- @param entityTypeComponent: Entity type of first colliding entity.
+-- @param positionComponent: Position of first colliding entity.
+-- @param colliderComponent: Collider of first colliding entity.
 -- @return number: Collision entity id.
 function collisionSystem.addCollisionEntity(
    self,
@@ -126,6 +124,25 @@ function collisionSystem.isEntityMovableByEntity(self, firstEntityType, secondEn
    return self.movableMap[firstEntityType][secondEntityType]
 end
 
+--- Checks if two circles are colliding.
+-- @param x1: Position of the first circle along the x-axis.
+-- @param y1: Position of the first circle along the y-axis.
+-- @param r1: Radius of the first circle.
+-- @param x2: Position of the second circle along the x-axis.
+-- @param y2: Position of the second circle along the y-axis.
+-- @param r2: Radius of the second circle.
+-- @return bool: True if the two entities are colliding.
+-- @return collisionData: Holds collision information between entities.
+--    table: collisionData
+--       bool: isColliding
+--       table: firstToSecondDirection
+--          float: x
+--          float: y
+--       table: secondToFirstDirection
+--          float: x
+--          float: y
+--       float: distanceBetweenCenters
+--       float: displacementDistance
 local function areCirclesColliding(
    x1, y1, r1,
    x2, y2, r2
@@ -169,7 +186,7 @@ end
 --    positionComponent,
 --    colliderComponent}: Second colliding entity.
 -- @return bool: True if the two entities are colliding.
--- @return collisionData[table]: Holds collision information between entities.
+-- @return collisionData: Holds collision information between entities.
 --    table: collisionData
 --       bool: isColliding
 --       table: firstToSecondDirection
