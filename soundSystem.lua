@@ -29,7 +29,6 @@ local soundSystem = {
 }
 
 --- Adds a sound entity to the sound system.
--- Sound entity {id, soundEffectComponent, positionComponent, finishedCallbackComponent}
 -- @param soundEffectComponent: Sound effect to play of entity.
 -- @param positionComponent: Position of entity.
 -- @param finishedCallbackComponent: Function to call after sound effect has finished.

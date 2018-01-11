@@ -39,7 +39,6 @@ local collisionSystem = {
 }
 
 --- Adds a collision entity to the collision system.
--- Collision entity {id, entityTypeComponent, positionComponent, colliderComponent}
 -- @param entityTypeComponent: Entity type of entity.
 -- @param positionComponent: Position of entity.
 -- @param colliderComponent: Collider of entity.
