@@ -1,6 +1,4 @@
-local entityFactory = require "entityFactory"
 local entityMapFactory = require "entityMapFactory"
-local clearTable = require "clearTable"
 
 
 
@@ -45,25 +43,18 @@ function soundSystem.addSoundEntity(
    -- positionComponent can be equal to nil for non-positional audio.
    -- finishedCallbackComponent can be equal to nil.
 
-   local entity = entityFactory:createEntity({
+   local id = self.entityMap:createAndAddEntity({
       soundEffectComponent = soundEffectComponent,
       positionComponent = positionComponent,
       finishedCallbackComponent = finishedCallbackComponent
    })
 
-   self.entityMap:add(entity)
-
-   return entity.id
+   return id
 end
 
 --- Removes a soundEntity from the sound system.
 -- @param id string: This system's ID of the entity to remove.
 function soundSystem.removeSoundEntity(self, id)
-   local entity = self.entityMap:get(id)
-   if entity == nil then
-      error("soundSystem.removeSoundEntity: id does not exist in map.")
-   end
-   clearTable(entity)
    self.entityMap:remove(id)
 end
 

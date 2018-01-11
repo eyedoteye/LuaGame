@@ -1,6 +1,4 @@
-local entityFactory = require "entityFactory"
 local entityMapFactory = require "entityMapFactory"
-local clearTable = require "clearTable"
 
 
 
@@ -49,25 +47,18 @@ function collisionSystem.addCollisionEntity(
    positionComponent,
    colliderComponent
 )
-   local entity = entityFactory:createEntity({
+   local id = self.entityMap:createAndAddEntity({
       entityTypeComponent = entityTypeComponent,
       positionComponent = positionComponent,
       colliderComponent = colliderComponent,
    })
 
-   self.entityMap:add(entity)
-
-   return entity.id
+   return id
 end
 
 --- Removes a collisionEntity from the collision system.
 -- @param id string: This system's ID of the entity to remove.
 function collisionSystem.removeCollisionEntity(self, id)
-   local entity = self.entityMap:get(id)
-   if entity == nil then
-      error("collisionSystem.removeCollisionEntity: id does not exist in map.")
-   end
-   clearTable(entity)
    self.entityMap:remove(id)
 end
 

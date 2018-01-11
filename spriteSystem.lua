@@ -1,6 +1,4 @@
-local entityFactory = require "entityFactory"
 local entityMapFactory = require "entityMapFactory"
-local clearTable = require "clearTable"
 
 
 
@@ -43,25 +41,18 @@ function spriteSystem.addSpriteEntity(
    positionComponent,
    positionOffsetComponent
 )
-   local entity = entityFactory:createEntity({
+   local id = self.entityMap:createAndAddEntity({
       spriteComponent = spriteComponent,
       positionComponent = positionComponent,
       positionOffsetComponent = positionOffsetComponent
    })
 
-   self.entityMap:add(entity)
-
-   return entity.id
+   return id
 end
 
 --- Removes a spriteEntity from the sprite system.
 -- @param id string: This system's ID of the entity to remove.
 function spriteSystem.removeSpriteEntity(self, id)
-   local entity = self.entityMap:get(id)
-   if entity == nil then
-      error("spriteSystem.removeSpriteEntity: id does not exist in map.")
-   end
-   clearTable(entity)
    self.entityMap:remove(id)
 end
 

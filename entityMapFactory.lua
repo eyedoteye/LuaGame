@@ -1,3 +1,8 @@
+local entityFactory = require "entityFactory"
+local clearTable = require "clearTable"
+
+
+
 local entityMapFactory = {}
 
 --- Gets an entity from the map by id.
@@ -25,18 +30,28 @@ local function entityMap_getSize(self)
 end
 
 --- Add an entity to the map.
--- @param entity table: The entity to be added to the map.
-local function entityMap_add(self, entity)
+-- @param components table: Table containing mapped components of entity.
+local function entityMap_createAndAddEntity(self, components)
+   local entity = entityFactory:createEntity(components)
+
    local index = self.size + 1
    self.entities[index] = entity
    self.size = self.size + 1
    self.idToIndex[entity.id] = index
+
+   return entity.id
 end
 
 --- Removes an entity from the map.
 -- @param id string: This map's ID of the entity to be removed.
 local function entityMap_remove(self, id)
    local index = self.idToIndex[id]
+   if index == nil then
+      error("entityMap_remove: id does not exist in map.")
+   end
+
+   local entity = self.entities[index]
+   clearTable(entity)
 
    if self.size > 1 and index ~= self.size then
       local replacementEntity = self.entities[self.size]
@@ -65,7 +80,7 @@ function entityMapFactory.create(self)
       get = entityMap_get,
       getList = entityMap_getList,
       getSize = entityMap_getSize,
-      add = entityMap_add,
+      createAndAddEntity = entityMap_createAndAddEntity,
       remove = entityMap_remove
    }
    return list
