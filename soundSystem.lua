@@ -28,11 +28,11 @@ local soundSystem = {
    entityMap = entityMapFactory:create() -- entityMap: Stores all soundEntities.
 }
 
---- Adds a sound entity to the sound system.
+--- Adds a soundEntity to the sound system.
 -- @param soundEffectComponent soundEffectComponent: Sound effect to play of entity.
 -- @param positionComponent positionComponent: Position of entity.
 -- @param finishedCallbackComponent finishedCallbackComponent: Function to call after sound effect has finished.
--- @return number: This system's ID of the sound entity.
+-- @return number: This system's ID of the soundEntity.
 function soundSystem.addSoundEntity(
    self,
    soundEffectComponent,
@@ -56,7 +56,7 @@ function soundSystem.addSoundEntity(
    return entity.id
 end
 
---- Removes a sound entity from the sound system.
+--- Removes a soundEntity from the sound system.
 -- @param id string: This system's ID of the entity to remove.
 function soundSystem.removeSoundEntity(self, id)
    local entity = self.entityMap:get(id)

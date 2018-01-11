@@ -38,11 +38,11 @@ local collisionSystem = {
    entityMap = entityMapFactory:create() -- entityMap: Stores all collision entities.
 }
 
---- Adds a collision entity to the collision system.
+--- Adds a collisionEntity to the collision system.
 -- @param entityTypeComponent entityTypeComponent: Entity type of entity.
 -- @param positionComponent positionComponent: Position of entity.
 -- @param colliderComponent colliderComponent: Collider of entity.
--- @return number: This system's ID of the collision entity.
+-- @return number: This system's ID of the collisionEntity.
 function collisionSystem.addCollisionEntity(
    self,
    entityTypeComponent,
@@ -60,7 +60,7 @@ function collisionSystem.addCollisionEntity(
    return entity.id
 end
 
---- Removes a collision entity from the collision system.
+--- Removes a collisionEntity from the collision system.
 -- @param id string: This system's ID of the entity to remove.
 function collisionSystem.removeCollisionEntity(self, id)
    local entity = self.entityMap:get(id)
@@ -248,7 +248,7 @@ local function collideEntities(firstEntity, secondEntity)
    end
 end
 
---- Collides all collision entities with each other and resolves their collisions.
+--- Collides all collisionEntitys with each other and resolves their collisions.
 local function collideAllEntities(self)
 	local collisions = {}
 
@@ -290,7 +290,7 @@ local function collideAllEntities(self)
 end
 
 --- Performs updates needed for mainting collision system.
--- Collides all collision entities with each other and resolves their collisions.:w
+-- Collides all collisionEntitys with each other and resolves their collisions.
 function collisionSystem.update(self)
    collideAllEntities(self)
 end

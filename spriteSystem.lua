@@ -31,7 +31,7 @@ local spriteSystem = {
    entityMap = entityMapFactory:create() -- entityMap: Stores all sprite entities.
 }
 
---- Adds a sprite entity to the sprite system.
+--- Adds a spriteEntity to the sprite system.
 -- @param spriteComponent spriteComponent: Sprite to display of the entity.
 -- @param positionComponent positionComponent: Position of the entity.
 -- @param positionOffsetComponent positionOffsetComponent: How much the sprite must be shifted
@@ -54,7 +54,7 @@ function spriteSystem.addSpriteEntity(
    return entity.id
 end
 
---- Removes a sprite entity from the sprite system.
+--- Removes a spriteEntity from the sprite system.
 -- @param id string: This system's ID of the entity to remove.
 function spriteSystem.removeSpriteEntity(self, id)
    local entity = self.entityMap:get(id)
@@ -65,14 +65,14 @@ function spriteSystem.removeSpriteEntity(self, id)
    self.entityMap:remove(id)
 end
 
---- Checks to see if a sprite entity exists within this system.
+--- Checks to see if a spriteEntity exists within this system by ID.
 -- @param id string: This system's ID of the entity to check for.
 -- @return bool: Whether the entity exists in this system or not.
 function spriteSystem.hasSpriteEntity(self, id)
    return self.entityMap:get(id) ~= nil
 end
 
---- Renders all sprite entities.
+--- Renders all spriteEntitys.
 local function render(
    spriteComponent,
    positionComponent,
@@ -95,7 +95,7 @@ local function render(
    )
 end
 
---- Renders all sprite entities.
+--- Renders all spriteEntitys.
 function spriteSystem.draw(self)
    for _, spriteEntity in ipairs(self.entityMap:getList()) do
       render(
