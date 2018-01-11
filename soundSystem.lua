@@ -3,16 +3,12 @@ local entityMapFactory = require "entityMapFactory"
 local clearTable = require "clearTable"
 
 
--- Sound Entity {
---    (id),
---    soundEffectComponent,
---    positionComponent,
---    finishedCallbackComponent
---}
 
-local soundSystem = {
-   entityMap = entityMapFactory:create()
-}
+--- Sound Entity
+-- (number: id) -- Automatically added by entityFactory
+-- table: soundEffectComponent
+-- table: positionComponent
+-- table: finishedCallbackComponent
 
 --- table: SoundEffectComponent
 -- name: SoundEffect
@@ -24,10 +20,20 @@ local soundSystem = {
 -- number: x
 -- number: y
 
---- table: FinishedCallbacksComponent
+--- table: FinishedCallbackComponent
 -- name: FinishedCallback
 --- function: callback
 
+local soundSystem = {
+   entityMap = entityMapFactory:create() -- entityMap: Stores all soundEntities
+}
+
+--- Adds a sound entity to the sound system.
+-- Sound entity {id, soundEffectComponent, positionComponent, finishedCallbackComponent}
+-- @param soundEffectComponent: Sound effect to play of entity.
+-- @param positionComponent: Position of entity.
+-- @param finishedCallbackComponent: Function to call after sound effect has finished.
+-- @return number: ID of sound entity.
 function soundSystem.addSoundEntity(
    self,
    soundEffectComponent,
@@ -51,6 +57,8 @@ function soundSystem.addSoundEntity(
    return entity.id
 end
 
+--- Removes a sound entity from the sound system.
+-- @param id: This system's ID of the entity to remove.
 function soundSystem.removeSoundEntity(self, id)
    local entity = self.entityMap:get(id)
    if entity == nil then
@@ -59,9 +67,6 @@ function soundSystem.removeSoundEntity(self, id)
    clearTable(entity)
    self.entityMap:remove(id)
 end
-
-
-
 
 --- Performs updates needed for maintaining sound system.
 -- Updates position of all love2d Sources.
