@@ -1,4 +1,5 @@
 local entityMapFactory = require "entityMapFactory"
+local clearTable = require "clearTable"
 
 
 
@@ -116,6 +117,12 @@ function collisionSystem.isEntityMovableByEntity(self, firstEntityType, secondEn
    return self.movableMap[firstEntityType][secondEntityType]
 end
 
+
+local function clearCollisionData(collisionData)
+   clearTable(collisionData.firstToSecondDirection)
+   clearTable(collisionData.secondToFirstDirection)
+   clearTable(collisionData)
+end
 --- Checks if two circles are colliding.
 -- @param x1 number: Position of the first circle along the x-axis.
 -- @param y1 number: Position of the first circle along the y-axis.
@@ -253,16 +260,18 @@ local function collideAllEntities(self)
 			local collisionEntity2 = entities[ii]
 
          --print("i = .. " .. i .. "   ii = " .. ii)
-         if collisionEntity1 == nil then
-            print("collisionEntity1 == nil   i = " .. i .. "   ii = " .. ii)
-         end
-         if collisionEntity2 == nil then
-            print("collisionEntity2 == nil   i = " .. i .. "   ii = " .. ii)
-         end
+--         if collisionEntity1 == nil then
+--            print("collisionEntity1 == nil   i = " .. i .. "   ii = " .. ii)
+--         end
+--         if collisionEntity2 == nil then
+--            print("collisionEntity2 == nil   i = " .. i .. "   ii = " .. ii)
+--         end
          local isColliding, collisionData = collideEntities(collisionEntity1, collisionEntity2)
 
          if isColliding then
             table.insert(collisions, {collisionEntity1, collisionEntity2, collisionData})
+         else
+            clearCollisionData(collisionData)
          end
 
 			ii = ii + 1
@@ -270,14 +279,14 @@ local function collideAllEntities(self)
 		i = i + 1
 	end
 
-   --[[
-	for _, collisionPair in pairs(collisions) do
-		collisionPair[1]:onCollision(collisionPair[2], collisionPair[3])
-		collisionPair[3].firstToSecondDirection.x = -collisionPair[3].firstToSecondDirection.x
-		collisionPair[3].firstToSecondDirection.y = -collisionPair[3].firstToSecondDirection.y
-		collisionPair[2]:onCollision(collisionPair[1], collisionPair[3])
+
+   for _, collisionPair in ipairs(collisions) do
+	--	collisionPair[1]:onCollision(collisionPair[2], collisionPair[3])
+	--	collisionPair[3].firstToSecondDirection.x = -collisionPair[3].firstToSecondDirection.x
+	--	collisionPair[3].firstToSecondDirection.y = -collisionPair[3].firstToSecondDirection.y
+   --	collisionPair[2]:onCollision(collisionPair[1], collisionPair[3])
+      clearCollisionData(collisionPair[3])
    end
-   ]]--
 end
 
 --- Performs updates needed for mainting collision system.
