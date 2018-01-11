@@ -61,6 +61,8 @@ function collisionSystem.addCollisionEntity(
    return entity.id
 end
 
+--- Removes a collision entity from the collision system.
+-- @param id: This system's ID of the entity to remove.
 function collisionSystem.removeCollisionEntity(self, id)
    local entity = self.entityMap:get(id)
    if entity == nil then
