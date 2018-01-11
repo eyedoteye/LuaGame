@@ -6,15 +6,19 @@ local clearTable = require "clearTable"
 
 
 local soundController = {
-   soundSources = {},
-   soundSystem = soundSystem
+   soundSources = {}, -- table[string] soundPool: Stores soundPools for each Source.
+   soundSystem = soundSystem -- soundSystem: Updates and tracks sounds.
 }
 
--- TODO: Move sourcePool closer to asset manager.
+--- Grabs a Source from its pool.
+-- @param soundName: Name of sound Source.
+-- @return userdata [Source]: Love2D Source of requested sound.
 local function getSoundSource(soundName)
    return soundController.soundSources[soundName]:get()
 end
 
+--- Returns clone of Source to its pool.
+-- @param soundEntity: Entity with the desired Source to repool.
 local function repoolFinishedSound(soundEntity)
    print("soundEffect: " .. soundEntity.soundEffectComponent.soundName .. " has stopped.")
 
@@ -26,7 +30,9 @@ local function repoolFinishedSound(soundEntity)
    soundController.soundSystem:removeSoundEntity(soundEntity.id)
 end
 
--- Temporary way to add sound sources until asset manager is added.
+--- Temporary way to add sound sources until asset manager is added.
+-- @param soundFilePath: Relative path to sound file.
+-- @param soundName: Desired name for the sound.
 function soundController.addSoundSource(self, soundFilePath, soundName)
    if self.soundSources[soundName] == nil then
       -- Intentional mutation of non-standard global variable 'love'
@@ -37,6 +43,10 @@ function soundController.addSoundSource(self, soundFilePath, soundName)
    end
 end
 
+--- Plays a sound attached to an updatable position given by a positionComponent.
+-- Only mono sounds are affected by a position.
+-- @param soundName: Name of the desired sound to play.
+-- @param positionComponent: Updatable position to attach playing sound to.
 function soundController.playSoundAttachedToPositionComponent(
    self,
    soundName,
@@ -60,6 +70,9 @@ function soundController.playSoundAttachedToPositionComponent(
    soundEffectComponent.source:play()
 end
 
+--- Plays a sound with no position.
+-- Note that will not convert mono sounds to stereo.
+-- @param soundName: Name of desired sound to play.
 function soundController.playSound(self, soundName)
    local soundEffectComponent = componentFactory:createComponent("SoundEffect", {
       source = getSoundSource(soundName),
