@@ -40,9 +40,9 @@ local collisionSystem = {
 
 --- Adds a collision entity to the collision system.
 -- Collision entity {id, entityTypeComponent, positionComponent, colliderComponent}
--- @param entityTypeComponent: Entity type of first colliding entity.
--- @param positionComponent: Position of first colliding entity.
--- @param colliderComponent: Collider of first colliding entity.
+-- @param entityTypeComponent: Entity type of entity.
+-- @param positionComponent: Position of entity.
+-- @param colliderComponent: Collider of entity.
 -- @return number: Collision entity id.
 function collisionSystem.addCollisionEntity(
    self,
