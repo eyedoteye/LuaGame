@@ -1,4 +1,8 @@
 local entityMapFactory = {}
+
+--- Gets an entity from the map by id.
+-- @param id string: Unique ID of entity in this map.
+-- @return table: Entity in map, matching given ID.
 local function entityMap_get(self, id)
    local index = self.idToIndex[id]
    if index == nil then
@@ -12,14 +16,20 @@ local function entityMap_getPairs(self)
    return ipairs(self.entities)
 end
 
+--- Gets all entities in map as an indexed list.
+-- @return list: An indexed list containting all entities in the map.
 local function entityMap_getList(self)
    return self.entities
 end
 
+--- Gets number of entities currently in the map.
+-- @return number: An integer representing the number of entities currently in the map.
 local function entityMap_getSize(self)
    return self.size
 end
 
+--- Add an entity to the map.
+-- @param entity table: The entity to be added to the map.
 local function entityMap_add(self, entity)
    local index = self.size + 1
    self.entities[index] = entity
@@ -27,6 +37,8 @@ local function entityMap_add(self, entity)
    self.idToIndex[entity.id] = index
 end
 
+--- Removes an entity from the map.
+-- @param id string: This map's ID of the entity to be removed.
 local function entityMap_remove(self, id)
    local index = self.idToIndex[id]
 
@@ -45,6 +57,9 @@ local function entityMap_remove(self, id)
    self.size = self.size - 1
 end
 
+--- Creates a new entityMap.
+-- Allows fast iteration over a list while allowing entities to be removed by id.
+-- @return table: A new entityMap.
 function entityMapFactory.create(self)
    local list = {
       entities = {},
