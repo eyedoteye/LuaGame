@@ -55,7 +55,7 @@ end
 
 --- Creates a new entityMap.
 -- Allows fast iteration over a list while allowing entities to be removed by id.
--- @return table: A new entityMap.
+-- @return entityMap: A new entityMap.
 function entityMapFactory.create(self)
    local list = {
       entities = {},
