@@ -2,17 +2,19 @@ local componentFactory = require "componentFactory"
 
 
 
-local spriteController = {
-   textureToQuadsMap = {},
-}
-
 --- list: textureToQuadsMap
 -- map: (textureName)
 --    userdata [Image]: texture
 --    map: quads
 --       userdata(s) [Quad]: (quadName)
+local spriteController = {
+   textureToQuadsMap = {},
+}
 
--- TODO: Connect with asset manager.
+
+--- Temporary way to add textures until asset manager is added.
+-- @param textureFilePath string: Relative path to sound file.
+-- @param textureName string: Desired name for texture.
 function spriteController.addTexture(self, textureFilePath, textureName)
    if self.textureToQuadsMap[textureName] ~= nil then
       error("spriteController.addTexture: textureName already exists in map.")
@@ -25,6 +27,14 @@ function spriteController.addTexture(self, textureFilePath, textureName)
    }
 end
 
+--- Temporary way to add quads to texture until asset manager is added.
+-- Adding a quad to a texture allows for a subimage within the texture to be used for display.
+-- @param textureName string: Name of texture to add quad to.
+-- @param quadName string: Desired name of quad.
+-- @param x integer: Position of quad in texture along the x-axis.
+-- @param y integer: Position of quad in texture along the y-axis.
+-- @param width integer: Width of the quad.
+-- @param height integer: Height of the quad.
 function spriteController.addQuadToTexture(
    self,
    textureName,
@@ -41,6 +51,9 @@ function spriteController.addQuadToTexture(
    end
 
    local texture = textureToQuadMap.texture
+   -- Intentional mutation of non-standard global variable 'love'
+   -- Implementation of love2d v0.10.2 api:
+   --    https://love2d.org/w/index.php?title=love.graphics.newQuad&oldid=18877
    local quad = love.graphics.newQuad(
       x, y,
       width, height,
@@ -49,6 +62,10 @@ function spriteController.addQuadToTexture(
    textureToQuadMap.quads[quadName] = quad
 end
 
+--- Creates and returns a new spriteComponent with the desired sprite.
+-- @param textureName string: Name of texture that the sprite is from.
+-- @param quadName string: Name of quad that that the sprite is from.
+-- @return spriteComponent: spriteComponent with the desired sprite.
 function spriteController.getSpriteComponentWithSprite(
    self,
    textureName,
@@ -61,6 +78,10 @@ function spriteController.getSpriteComponentWithSprite(
    return spriteComponent
 end
 
+--- Updates an existing spriteComponent with the desired sprite.
+-- @param spriteComponent spriteComponent: The spriteComponent to update.
+-- @param textureName string: Name of texture that the sprite is from.
+-- @param quadName string: Name of quad that that the sprite is from.
 function spriteController.updateSpriteComponentWithSprite(
    self,
    spriteComponent,
