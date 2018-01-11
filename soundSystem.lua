@@ -33,7 +33,7 @@ local soundSystem = {
 -- @param soundEffectComponent: Sound effect to play of entity.
 -- @param positionComponent: Position of entity.
 -- @param finishedCallbackComponent: Function to call after sound effect has finished.
--- @return number: ID of sound entity.
+-- @return number: This system's ID of the sound entity.
 function soundSystem.addSoundEntity(
    self,
    soundEffectComponent,

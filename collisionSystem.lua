@@ -43,7 +43,7 @@ local collisionSystem = {
 -- @param entityTypeComponent: Entity type of entity.
 -- @param positionComponent: Position of entity.
 -- @param colliderComponent: Collider of entity.
--- @return number: Collision entity id.
+-- @return number: This system's ID of the collision entity.
 function collisionSystem.addCollisionEntity(
    self,
    entityTypeComponent,
