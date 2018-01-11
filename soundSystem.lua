@@ -25,7 +25,7 @@ local clearTable = require "clearTable"
 --- function: callback
 
 local soundSystem = {
-   entityMap = entityMapFactory:create() -- entityMap: Stores all soundEntities
+   entityMap = entityMapFactory:create() -- entityMap: Stores all soundEntities.
 }
 
 --- Adds a sound entity to the sound system.
