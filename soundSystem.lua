@@ -52,7 +52,10 @@ function soundSystem.addSoundEntity(
 end
 
 function soundSystem.removeSoundEntity(self, id)
-   local entity = self.entityMap:get(i)
+   local entity = self.entityMap:get(id)
+   if entity == nil then
+      error("soundSystem.removeSoundEntity: id does not exist in map.")
+   end
    clearTable(entity)
    self.entityMap:remove(id)
 end

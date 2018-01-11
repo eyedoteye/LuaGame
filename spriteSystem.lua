@@ -31,6 +31,9 @@ end
 
 function spriteSystem.removeSpriteEntity(self, id)
    local entity = self.entityMap:get(id)
+   if entity == nil then
+      error("spriteSystem.removeSpriteEntity: id does not exist in map.")
+   end
    clearTable(entity)
    self.entityMap:remove(id)
 end
