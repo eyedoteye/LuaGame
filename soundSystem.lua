@@ -29,9 +29,9 @@ local soundSystem = {
 }
 
 --- Adds a sound entity to the sound system.
--- @param soundEffectComponent: Sound effect to play of entity.
--- @param positionComponent: Position of entity.
--- @param finishedCallbackComponent: Function to call after sound effect has finished.
+-- @param soundEffectComponent soundEffectComponent: Sound effect to play of entity.
+-- @param positionComponent positionComponent: Position of entity.
+-- @param finishedCallbackComponent finishedCallbackComponent: Function to call after sound effect has finished.
 -- @return number: This system's ID of the sound entity.
 function soundSystem.addSoundEntity(
    self,
@@ -57,7 +57,7 @@ function soundSystem.addSoundEntity(
 end
 
 --- Removes a sound entity from the sound system.
--- @param id: This system's ID of the entity to remove.
+-- @param id string: This system's ID of the entity to remove.
 function soundSystem.removeSoundEntity(self, id)
    local entity = self.entityMap:get(id)
    if entity == nil then
