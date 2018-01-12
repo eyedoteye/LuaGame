@@ -39,6 +39,29 @@ local entity2 = entityFactory:createEntity(
    }
 )
 
+local screenWidth, screenHeight = love.graphics.getDimensions()
+local randomEntities = {}
+for i = 1, 10 do
+   local entity = entityFactory:createEntity({
+      entityTypeComponent = componentFactory:createComponent("EntityType", {type = "Ball"}),
+      positionComponent = componentFactory:createComponent(
+         "Position",
+         {
+            x = math.random() * screenWidth,
+            y = math.random() * screenHeight
+         }
+      ),
+      colliderComponent = componentFactory:createComponent("Collider.Circle", {radius = 5})
+   })
+   table.insert(randomEntities, entity)
+
+   collisionSystem:addCollisionEntity(
+      entity.entityTypeComponent,
+      entity.positionComponent,
+      entity.colliderComponent
+   )
+end
+
 collisionSystem:addCollisionEntity(
    entity1.entityTypeComponent,
    entity1.positionComponent,
@@ -52,6 +75,9 @@ collisionSystem:addCollisionEntity(
 
 collisionSystem:makeEntitiesCollidable(entity1.entityTypeComponent, entity2.entityTypeComponent)
 collisionSystem:makeEntityMovableByEntity(entity2.entityTypeComponent, entity1.entityTypeComponent)
+
+collisionSystem:makeEntitiesCollidable(entity2.entityTypeComponent, entity2.entityTypeComponent)
+collisionSystem:makeEntityMovableByEntity(entity2.entityTypeComponent, entity2.entityTypeComponent)
 
 rPrint = require "rPrint"
 local spriteID = nil
@@ -104,6 +130,16 @@ function love.draw()
       entity2.positionComponent.x, entity2.positionComponent.y,
       entity2.colliderComponent.radius,
       32)
+   
+   love.graphics.setColor(0, 255, 255, 255)
+   for _, entity in ipairs(randomEntities) do
+      love.graphics.circle(
+         "fill",
+         entity.positionComponent.x, entity.positionComponent.y,
+         entity.colliderComponent.radius,
+         32 
+      )
+   end
 
    love.graphics.setColor(255, 255, 255, 255)
    spriteSystem:draw()

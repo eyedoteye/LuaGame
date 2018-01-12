@@ -67,18 +67,18 @@ end
 -- @param firstEntityType entityTypeComponent: Type name of the first entity to make collidable.
 -- @param secondEntityType entityTypeComponent: Type name of the second entity to make collidable.
 function collisionSystem.makeEntitiesCollidable(self, firstEntityType, secondEntityType)
-   self.collidableMap[firstEntityType] = self.collidableMap[firstEntityType] or {}
-   self.collidableMap[secondEntityType] = self.collidableMap[secondEntityType] or {}
-   self.collidableMap[firstEntityType][secondEntityType] = true
-   self.collidableMap[secondEntityType][firstEntityType] = true
+   self.collidableMap[firstEntityType.type] = self.collidableMap[firstEntityType.type] or {}
+   self.collidableMap[secondEntityType.type] = self.collidableMap[secondEntityType.type] or {}
+   self.collidableMap[firstEntityType.type][secondEntityType.type] = true
+   self.collidableMap[secondEntityType.type][firstEntityType.type] = true
 end
 
 --- Turns off collision checking between two entity types.
 -- @param firstEntityType entityTypeComponent: Type name of the first entity to make uncollidable.
 -- @param secondEntityType entityTypeComponent: Type name of the second entity to make uncollidable.
 function collisionSystem.unmakeEntitiesCollidable(self, firstEntityType, secondEntityType)
-   self.collidableMap[firstEntityType][secondEntityType] = nil
-   self.collidableMap[secondEntityType][firstEntityType] = nil
+   self.collidableMap[firstEntityType.type][secondEntityType.type] = nil
+   self.collidableMap[secondEntityType.type][firstEntityType.type] = nil
 end
 
 --- Returns if two entity types are collidable.
@@ -86,35 +86,35 @@ end
 -- @param secondEntityType entityTypeComponent: Type name of the second entity.
 -- @return bool: Return true if firstEntityType and secondEntityType are collidable.
 function collisionSystem.areEntitiesCollidable(self, firstEntityType, secondEntityType)
-   if self.collidableMap[firstEntityType] == nil then
+   if self.collidableMap[firstEntityType.type] == nil then
       return false
    end
-   return self.collidableMap[firstEntityType][secondEntityType]
+   return self.collidableMap[firstEntityType.type][secondEntityType.type]
 end
 
 --- Turns on one-way movability between two entity types.
 -- @param firstEntityType entityTypeComponent: Type name of entity that will be made the movable.
 -- @param secondEntityType entityTypeComponent: Type name of entity that will be made the mover.
 function collisionSystem.makeEntityMovableByEntity(self, firstEntityType, secondEntityType)
-   self.movableMap[firstEntityType] = self.movableMap[firstEntityType] or {}
-   self.movableMap[firstEntityType][secondEntityType] = true
+   self.movableMap[firstEntityType.type] = self.movableMap[firstEntityType.type] or {}
+   self.movableMap[firstEntityType.type][secondEntityType.type] = true
 end
 
 --- Turns off one-way movability between two entity types.
 -- @param firstEntityType entityTypeComponent: Entity type that will no longer be the movable.
 -- @param secondEntityType entityTypeComponent: Entity type that will no longer be the mover.
 function collisionSystem.unmakeEntityMovableByEntity(self, firstEntityType, secondEntityType)
-   self.movableMap[firstEntityType][secondEntityType] = nil
+   self.movableMap[firstEntityType.type][secondEntityType.type] = nil
 end
 
 --- Returns if first entity type is movable by second entity type.
 -- @param firstEntityType entityTypeComponent: Entity type to be checked for being the movable.
 -- @param secondEntityType entityTypeComponent: Entity type to be checked for being the mover.
 function collisionSystem.isEntityMovableByEntity(self, firstEntityType, secondEntityType)
-   if self.movableMap[firstEntityType] == nil then
+   if self.movableMap[firstEntityType.type] == nil then
       return false
    end
-   return self.movableMap[firstEntityType][secondEntityType]
+   return self.movableMap[firstEntityType.type][secondEntityType.type]
 end
 
 
@@ -226,9 +226,9 @@ local function collideEntities(firstEntity, secondEntity)
                secondEntity.entityTypeComponent
             ) then
                firstEntity.positionComponent.x = firstEntity.positionComponent.x +
-                  collisionData.firstToSecondDirection.x * collisionData.firstDisplacementDistance
+                  collisionData.firstToSecondDirection.x * collisionData.displacementDistance
                firstEntity.positionComponent.y = firstEntity.positionComponent.y +
-                  collisionData.firstToSecondDirection.y * collisionData.firstDisplacementDistance
+                  collisionData.firstToSecondDirection.y * collisionData.displacementDistance
             end
          end
 
