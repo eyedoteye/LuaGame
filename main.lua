@@ -60,6 +60,8 @@ for i = 1, 10 do
       entity.positionComponent,
       entity.colliderComponent
    )
+   entity.xVel = math.floor(math.random() * 1) == 1 and 1 or -1
+   entity.yVel = math.floor(math.random() * 1) == 1 and 1 or -1
 end
 
 collisionSystem:addCollisionEntity(
@@ -130,7 +132,7 @@ function love.draw()
       entity2.positionComponent.x, entity2.positionComponent.y,
       entity2.colliderComponent.radius,
       32)
-   
+ 
    love.graphics.setColor(0, 255, 255, 255)
    for _, entity in ipairs(randomEntities) do
       love.graphics.circle(
@@ -196,6 +198,27 @@ local function update(dt)
 --            entity1.positionComponent,
 --            positionOffsetComponent
 --         )
+      end
+   end
+
+   for _, entity in ipairs(randomEntities) do
+      local xVel = entity.xVel
+      local yVel = entity.yVel
+      entity.positionComponent.x = entity.positionComponent.x + xVel
+      entity.positionComponent.y = entity.positionComponent.y + yVel
+      if entity.positionComponent.x - entity.colliderComponent.radius < 0 then
+         entity.positionComponent.x = entity.colliderComponent.radius
+         entity.xVel = -entity.xVel
+      elseif entity.positionComponent.x + entity.colliderComponent.radius > screenWidth then
+         entity.positionComponent.x = screenWidth - entity.colliderComponent.radius
+         entity.xVel = -entity.xVel
+      end
+      if entity.positionComponent.y - entity.colliderComponent.radius < 0 then
+         entity.positionComponent.y = entity.colliderComponent.radius
+         entity.yVel = -entity.yVel
+      elseif entity.positionComponent.y + entity.colliderComponent.radius > screenHeight then
+         entity.positionComponent.y = screenHeight - entity.colliderComponent.radius
+         entity.yVel = -entity.yVel
       end
    end
 
