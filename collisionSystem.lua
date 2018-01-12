@@ -171,6 +171,7 @@ local function areCirclesColliding(
       displacementDistance = totalRadius - distance,
    }
 
+
 	return isColliding, collisionData
 end
 
@@ -197,7 +198,6 @@ local function collideEntities(firstEntity, secondEntity)
             firstEntity.positionComponent.x, firstEntity.positionComponent.y, firstEntity.colliderComponent.radius,
             secondEntity.positionComponent.x, secondEntity.positionComponent.y, secondEntity.colliderComponent.radius
          )
-
          if isColliding then
             if collisionSystem:isEntityMovableByEntity(
                secondEntity.entityTypeComponent,
@@ -286,6 +286,7 @@ local function collideAllEntities(self)
 	--	collisionPair[3].firstToSecondDirection.y = -collisionPair[3].firstToSecondDirection.y
    --	collisionPair[2]:onCollision(collisionPair[1], collisionPair[3])
       clearCollisionData(collisionPair[3])
+      clearTable(collisionPair)
    end
 end
 
