@@ -20,6 +20,7 @@ local componentFactory ={
       ["Collider.Circle"] = function(properties)
          local component = {
             name = "Collider.Circle",
+            resolveCollision = properties.resolveCollision,
             radius = properties.radius
          }
          return component
@@ -28,6 +29,7 @@ local componentFactory ={
       ["Collider.CircleLine"] = function(properties)
          local component = {
             name = "Collider.CircleLine",
+            resolveCollision = properties.resolveCollision,
             radius = properties.radius,
             length = properties.length
          }

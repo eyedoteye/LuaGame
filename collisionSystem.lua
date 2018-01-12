@@ -24,12 +24,17 @@ local clearTable = require "clearTable"
 --    table: Circle
 --       name: Collider.Circle
 --       float: radius
+--       function: resolveCollision
 --
 --    table: CircleLine
 --       name: Collider.CircleLine
 --       float: radius
 --       float: length
+--       function: resolveCollision
 
+--- table: ResolveCollisionComponent
+-- name: ResolveCollision
+-- function: resolveCollision
 local collisionSystem = {
    collidableMap = {}, -- table[string][string] bool: Maps collidable entity types.
    movableMap = {}, -- table[string][string] bool: Maps movable entity types to their respective mover entity types.
@@ -41,17 +46,21 @@ local collisionSystem = {
 -- @param entityTypeComponent entityTypeComponent: Entity type of entity.
 -- @param positionComponent positionComponent: Position of entity.
 -- @param colliderComponent colliderComponent: Collider of entity.
+-- @param parent entity: Parent entity from which these components are from.
+--                       This is used in conjuction with resolveCollision in colliderComponent.
 -- @return number: This system's ID of the collisionEntity.
 function collisionSystem.addCollisionEntity(
    self,
    entityTypeComponent,
    positionComponent,
-   colliderComponent
+   colliderComponent,
+   parent
 )
    local id = self.entityMap:createAndAddEntity({
       entityTypeComponent = entityTypeComponent,
       positionComponent = positionComponent,
       colliderComponent = colliderComponent,
+      parent = parent
    })
 
    return id
@@ -281,10 +290,16 @@ local function collideAllEntities(self)
 
 
    for _, collisionPair in ipairs(collisions) do
-	--	collisionPair[1]:onCollision(collisionPair[2], collisionPair[3])
-	--	collisionPair[3].firstToSecondDirection.x = -collisionPair[3].firstToSecondDirection.x
-	--	collisionPair[3].firstToSecondDirection.y = -collisionPair[3].firstToSecondDirection.y
-   --	collisionPair[2]:onCollision(collisionPair[1], collisionPair[3])
+      if collisionPair[1].colliderComponent.resolveCollision ~= nil then
+         collisionPair[1].colliderComponent.resolveCollision(collisionPair[1], collisionPair[2], collisionPair[3])
+      end
+      if collisionPair[2].colliderComponent.resolveCollision ~= nil then
+         collisionPair[3].firstToSecondDirection.x = -collisionPair[3].firstToSecondDirection.x
+         collisionPair[3].firstToSecondDirection.y = -collisionPair[3].firstToSecondDirection.y
+         collisionPair[3].secondToFirstDirection.x = -collisionPair[3].secondToFirstDirection.x
+         collisionPair[3].secondToFirstDirection.y = -collisionPair[3].secondToFirstDirection.y
+         collisionPair[2].colliderComponent.resolveCollision(collisionPair[2], collisionPair[1], collisionPair[3])
+      end
       clearCollisionData(collisionPair[3])
       clearTable(collisionPair)
    end

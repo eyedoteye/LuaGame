@@ -41,6 +41,11 @@ local entity2 = entityFactory:createEntity(
 
 local screenWidth, screenHeight = love.graphics.getDimensions()
 local randomEntities = {}
+local rPrint = require "rPrint"
+local function resolveBallCollision(this, other, collisionData)
+   this.parent.xVel = collisionData.firstToSecondDirection.x * math.sqrt(2)
+   this.parent.yVel = collisionData.firstToSecondDirection.y * math.sqrt(2)
+end
 for i = 1, 10 do
    local entity = entityFactory:createEntity({
       entityTypeComponent = componentFactory:createComponent("EntityType", {type = "Ball"}),
@@ -51,14 +56,21 @@ for i = 1, 10 do
             y = math.random() * screenHeight
          }
       ),
-      colliderComponent = componentFactory:createComponent("Collider.Circle", {radius = 5})
+      colliderComponent = componentFactory:createComponent(
+         "Collider.Circle",
+         {
+            radius = 5,
+            resolveCollision = resolveBallCollision
+         }
+      )
    })
    table.insert(randomEntities, entity)
 
    collisionSystem:addCollisionEntity(
       entity.entityTypeComponent,
       entity.positionComponent,
-      entity.colliderComponent
+      entity.colliderComponent,
+      entity
    )
    entity.xVel = math.floor(math.random() * 1) == 1 and 1 or -1
    entity.yVel = math.floor(math.random() * 1) == 1 and 1 or -1
