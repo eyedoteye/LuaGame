@@ -43,8 +43,8 @@ local screenWidth, screenHeight = love.graphics.getDimensions()
 local randomEntities = {}
 local rPrint = require "rPrint"
 local function resolveBallCollision(this, other, collisionData)
-   this.parent.xVel = collisionData.firstToSecondDirection.x * math.sqrt(2)
-   this.parent.yVel = collisionData.firstToSecondDirection.y * math.sqrt(2)
+   this.parent.xVel = collisionData.secondToFirstDirection.x * math.sqrt(2)
+   this.parent.yVel = collisionData.secondToFirstDirection.y * math.sqrt(2)
 end
 for i = 1, 10 do
    local entity = entityFactory:createEntity({

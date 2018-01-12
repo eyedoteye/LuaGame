@@ -169,12 +169,12 @@ local function areCirclesColliding(
    local collisionData = {
       isColliding = isColliding,
       firstToSecondDirection = {
-         x = -offsetX / distance,
-         y = -offsetY / distance
-      },
-      secondToFirstDirection = {
          x = offsetX / distance,
          y = offsetY / distance
+      },
+      secondToFirstDirection = {
+         x = -offsetX / distance,
+         y = -offsetY / distance
       },
       distanceBetweenCenters = distance,
       displacementDistance = totalRadius - distance,
@@ -219,24 +219,24 @@ local function collideEntities(firstEntity, secondEntity)
                ) then
                   collisionData.displacementDistance = collisionData.displacementDistance / 2
 
-                  firstEntity.positionComponent.x = firstEntity.positionComponent.x +
+                  firstEntity.positionComponent.x = firstEntity.positionComponent.x -
                      collisionData.firstToSecondDirection.x * collisionData.displacementDistance
-                  firstEntity.positionComponent.y = firstEntity.positionComponent.y +
+                  firstEntity.positionComponent.y = firstEntity.positionComponent.y -
                      collisionData.firstToSecondDirection.y * collisionData.displacementDistance
                end
 
-               secondEntity.positionComponent.x = secondEntity.positionComponent.x +
+               secondEntity.positionComponent.x = secondEntity.positionComponent.x -
                   collisionData.secondToFirstDirection.x * collisionData.displacementDistance
-               secondEntity.positionComponent.y = secondEntity.positionComponent.y +
+               secondEntity.positionComponent.y = secondEntity.positionComponent.y -
                   collisionData.secondToFirstDirection.y * collisionData.displacementDistance
 
             elseif collisionSystem:isEntityMovableByEntity(
                firstEntity.entityTypeComponent,
                secondEntity.entityTypeComponent
             ) then
-               firstEntity.positionComponent.x = firstEntity.positionComponent.x +
+               firstEntity.positionComponent.x = firstEntity.positionComponent.x -
                   collisionData.firstToSecondDirection.x * collisionData.displacementDistance
-               firstEntity.positionComponent.y = firstEntity.positionComponent.y +
+               firstEntity.positionComponent.y = firstEntity.positionComponent.y -
                   collisionData.firstToSecondDirection.y * collisionData.displacementDistance
             end
          end
