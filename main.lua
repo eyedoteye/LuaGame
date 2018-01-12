@@ -48,7 +48,7 @@ local function resolveBallCollision(this, other, collisionData)
       this.parent.yVel = collisionData.secondToFirstDirection.y * math.sqrt(2)
    end
 end
-for i = 1, 10 do
+for i = 1, 30 do
    local entity = entityFactory:createEntity({
       entityTypeComponent = componentFactory:createComponent("EntityType", {type = "Ball"}),
       positionComponent = componentFactory:createComponent(
@@ -162,6 +162,8 @@ function love.draw()
 end
 
 local function update(dt)
+   screenWidth, screenHeight = love.graphics.getDimensions()
+   love.audio.setPosition(screenWidth / 2, screenHeight / 2, 100)
    --print("frame: " .. frame .. "   dt: " .. dt)
 
    local y = 0
