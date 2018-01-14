@@ -5,6 +5,7 @@ local SPEED_PER_FRAME = 1 / 60
 local frame = 0
 
 
+
 local inputController = require "inputController"
 local collisionSystem = require "collisionSystem"
 local soundSystem = require "soundSystem"
@@ -12,118 +13,12 @@ local soundController = require "soundController"
 local spriteSystem = require "spriteSystem"
 local spriteController = require "spriteController"
 
-local systems = {
-   inputController = inputController,
-   collisionSystem = collisionSystem,
-   soundSystem = soundSystem
-}
 
 local componentFactory = require "componentFactory"
 local entityFactory = require "entityFactory"
 
 
-
-local entity1 = entityFactory:createEntity(
-   {
-      entityTypeComponent = componentFactory:createComponent("EntityType", {type = "Player"}),
-      positionComponent = componentFactory:createComponent("Position", {x = 50, y = 50}),
-      colliderComponent = componentFactory:createComponent("Collider.Circle", {radius = 10})
-   }
-)
-
-local entity2 = entityFactory:createEntity(
-   {
-      entityTypeComponent = componentFactory:createComponent("EntityType", {type = "Ball"}),
-      positionComponent = componentFactory:createComponent("Position", {x = 100, y = 50}),
-      colliderComponent = componentFactory:createComponent("Collider.Circle", {radius = 10})
-   }
-)
-
-local screenWidth, screenHeight = love.graphics.getDimensions()
-local randomEntities = {}
-local rPrint = require "rPrint"
-local function resolveBallCollision(this, other, collisionData)
-   if other.entityTypeComponent.type == "Ball" then
-      this.parent.xVel = collisionData.secondToFirstDirection.x * math.sqrt(2)
-      this.parent.yVel = collisionData.secondToFirstDirection.y * math.sqrt(2)
-   end
-end
-for i = 1, 30 do
-   local entity = entityFactory:createEntity({
-      entityTypeComponent = componentFactory:createComponent("EntityType", {type = "Ball"}),
-      positionComponent = componentFactory:createComponent(
-         "Position",
-         {
-            x = math.random() * screenWidth,
-            y = math.random() * screenHeight
-         }
-      ),
-      colliderComponent = componentFactory:createComponent(
-         "Collider.Circle",
-         {
-            radius = 5,
-            resolveCollision = resolveBallCollision
-         }
-      )
-   })
-   table.insert(randomEntities, entity)
-
-   collisionSystem:addCollisionEntity(
-      entity.entityTypeComponent,
-      entity.positionComponent,
-      entity.colliderComponent,
-      entity
-   )
-   entity.xVel = math.floor(math.random() * 1) == 1 and 1 or -1
-   entity.yVel = math.floor(math.random() * 1) == 1 and 1 or -1
-end
-
-collisionSystem:addCollisionEntity(
-   entity1.entityTypeComponent,
-   entity1.positionComponent,
-   entity1.colliderComponent
-)
-collisionSystem:addCollisionEntity(
-   entity2.entityTypeComponent,
-   entity2.positionComponent,
-   entity2.colliderComponent
-)
-
-collisionSystem:makeEntitiesCollidable(entity1.entityTypeComponent, entity2.entityTypeComponent)
-collisionSystem:makeEntityMovableByEntity(entity2.entityTypeComponent, entity1.entityTypeComponent)
-
-collisionSystem:makeEntitiesCollidable(entity2.entityTypeComponent, entity2.entityTypeComponent)
-collisionSystem:makeEntityMovableByEntity(entity2.entityTypeComponent, entity2.entityTypeComponent)
-
-rPrint = require "rPrint"
-local spriteID = nil
 function love.load()
-   soundController:addSoundSource("tch.ogg", "tch")
-   spriteController:addTexture("spritesheet.png", "airplaine")
-   spriteController:addQuadToTexture(
-      "airplaine",
-      "idle",
-      0, 0,
-      32, 32)
-
-   local spriteComponent = spriteController:getSpriteComponentWithSprite(
-      "airplaine",
-      "idle"
-   )
-   local _, _, w, h = spriteComponent.quad:getViewport()
-   local positionOffsetComponent = componentFactory:createComponent(
-      "PositionOffset",
-      {
-         x = -w / 2,
-         y = -h / 2
-      }
-   )
-
-   spriteID = spriteSystem:addSpriteEntity(
-      spriteComponent,
-      entity1.positionComponent,
-      positionOffsetComponent
-   )
 end
 
 function love.draw()
@@ -134,110 +29,16 @@ function love.draw()
 		love.graphics.print('Mouse: (' .. love.mouse.getX() .. ',' .. love.mouse.getY() .. ')', 85,25)
 		love.graphics.setColor(255, 255, 255)
    end
+   --
 
-   love.graphics.setColor(0, 255, 0, 255 * 0.8)
-   love.graphics.circle(
-      "fill",
-      entity1.positionComponent.x, entity1.positionComponent.y,
-      entity1.colliderComponent.radius,
-      32)
-   love.graphics.circle(
-      "fill",
-      entity2.positionComponent.x, entity2.positionComponent.y,
-      entity2.colliderComponent.radius,
-      32)
- 
-   love.graphics.setColor(0, 255, 255, 255)
-   for _, entity in ipairs(randomEntities) do
-      love.graphics.circle(
-         "fill",
-         entity.positionComponent.x, entity.positionComponent.y,
-         entity.colliderComponent.radius,
-         32 
-      )
-   end
-
+   --
    love.graphics.setColor(255, 255, 255, 255)
    spriteSystem:draw()
 end
 
 local function update(dt)
-   screenWidth, screenHeight = love.graphics.getDimensions()
-   love.audio.setPosition(screenWidth / 2, screenHeight / 2, 100)
-   --print("frame: " .. frame .. "   dt: " .. dt)
 
-   local y = 0
-   local x = 0
-   if inputController:isDown(1, "up") then
-      y = y - 1
-   end
-   if inputController:isDown(1, "down") then
-      y = y + 1
-   end
-   if inputController:isDown(1, "left") then
-      x = x - 1
-   end
-   if inputController:isDown(1, "right") then
-      x = x + 1
-   end
-   local speed = 100
-   entity1.positionComponent.x = entity1.positionComponent.x + x * speed * dt
-   entity1.positionComponent.y = entity1.positionComponent.y + y * speed * dt
-
-   if inputController:isDown(1, "leftclick") then
-      soundController:playSoundAttachedToPositionComponent(
-         "tch",
-         entity1.positionComponent
-      )
-   end
-
-   if inputController:isDown(1, "rightclick") then
-      if spriteSystem:hasSpriteEntity(spriteID) then
-         spriteSystem:removeSpriteEntity(spriteID)
-      else
-         print("none")
---         local spriteComponent = spriteController:getSpriteComponentWithSprite(
---            "airplaine",
---            "idle"
---         )
---         local _, _, w, h = spriteComponent.quad:getViewport()
---         local positionOffsetComponent = componentFactory:createComponent(
---            "PositionOffset",
---            {
---               x = -w / 2,
---               y = -h / 2
---            }
---         )
---
---         spriteID = spriteSystem:addSpriteEntity(
---            spriteComponent,
---            entity1.positionComponent,
---            positionOffsetComponent
---         )
-      end
-   end
-
-   for _, entity in ipairs(randomEntities) do
-      local xVel = entity.xVel
-      local yVel = entity.yVel
-      entity.positionComponent.x = entity.positionComponent.x + xVel
-      entity.positionComponent.y = entity.positionComponent.y + yVel
-      if entity.positionComponent.x - entity.colliderComponent.radius < 0 then
-         entity.positionComponent.x = entity.colliderComponent.radius
-         entity.xVel = -entity.xVel
-      elseif entity.positionComponent.x + entity.colliderComponent.radius > screenWidth then
-         entity.positionComponent.x = screenWidth - entity.colliderComponent.radius
-         entity.xVel = -entity.xVel
-      end
-      if entity.positionComponent.y - entity.colliderComponent.radius < 0 then
-         entity.positionComponent.y = entity.colliderComponent.radius
-         entity.yVel = -entity.yVel
-      elseif entity.positionComponent.y + entity.colliderComponent.radius > screenHeight then
-         entity.positionComponent.y = screenHeight - entity.colliderComponent.radius
-         entity.yVel = -entity.yVel
-      end
-   end
-
+   --
    collisionSystem:update()
    soundSystem:update()
 end
@@ -247,7 +48,6 @@ function love.update(dt)
    local newDT = dt + love.timer.getTime() - frameStartTime
 
    while newDT < SPEED_PER_FRAME do
-   --   print(newDT, SPEED_PER_FRAME)
       newDT = dt + love.timer.getTime() - frameStartTime
    end
 
@@ -270,7 +70,6 @@ function love.update(dt)
 	if debugMode and stableMemory then
 		collectgarbage()
    end
-   --print(love.timer.getFPS())
 end
 
 function love.focus(focused)
