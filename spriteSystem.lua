@@ -63,6 +63,13 @@ function spriteSystem.hasSpriteEntity(self, id)
    return self.entityMap:get(id) ~= nil
 end
 
+--- Gets a spriteEntity within this system by ID.
+-- @param id string: This system's ID of the entity to get.
+-- @return spriteEntity: The spriteEntity matching the given ID.
+function spriteSystem.getSpriteEntity(self, id)
+   return self.entityMap:get(id)
+end
+
 --- Renders all spriteEntitys.
 local function render(
    spriteComponent,
