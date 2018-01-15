@@ -17,8 +17,18 @@ local spriteController = require "spriteController"
 local componentFactory = require "componentFactory"
 local entityFactory = require "entityFactory"
 
+local player = require "player"
+
 
 function love.load()
+   spriteController:addTexture("player.png", "player")
+   spriteController:addQuadToTexture(
+      "player",
+      "idle",
+      0, 0,
+      32, 32
+   )
+   player:load()
 end
 
 function love.draw()
@@ -30,6 +40,13 @@ function love.draw()
 		love.graphics.setColor(255, 255, 255)
    end
    --
+   love.graphics.setColor(255, 255, 255)
+   love.graphics.circle(
+      "fill",
+      player.positionComponent.x,
+      player.positionComponent.y,
+      16
+   )
 
    --
    love.graphics.setColor(255, 255, 255, 255)
@@ -37,7 +54,7 @@ function love.draw()
 end
 
 local function update(dt)
-
+   player:update(dt)
    --
    collisionSystem:update()
    soundSystem:update()
