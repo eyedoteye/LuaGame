@@ -79,6 +79,14 @@ local componentFactory ={
             rotation = properties.rotation
          }
          return component
+      end,
+
+      ["Update"] = function(properties)
+         local component = {
+            name = "Update",
+            update = properties.update
+         }
+         return component
       end
    }
 }

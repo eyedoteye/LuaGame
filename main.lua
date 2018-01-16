@@ -12,6 +12,7 @@ local soundSystem = require "soundSystem"
 local soundController = require "soundController"
 local spriteSystem = require "spriteSystem"
 local spriteController = require "spriteController"
+local updateSystem = require "updateSystem"
 
 
 local componentFactory = require "componentFactory"
@@ -19,8 +20,17 @@ local entityFactory = require "entityFactory"
 
 local player = require "player"
 
+local function mouse_updateCrosshair(self)
+   local x, y = love.mouse.getPosition()
+   self.positionComponent.x = x
+   self.positionComponent.y = y
+end
+local function mouse_update(updateEntity, dt)
+   mouse_updateCrosshair(updateEntity.parent)
+end
 local mouse = {
-   positionComponent = componentFactory:createComponent("Position", {})
+   positionComponent = componentFactory:createComponent("Position", {}),
+   updateComponent = componentFactory:createComponent("Update", {update = mouse_update})
 }
 
 function mouse.load(self)
@@ -35,6 +45,11 @@ function mouse.load(self)
       self.positionComponent
    )
    love.mouse.setVisible(false)
+
+   self.updateSystemEntityID = updateSystem:addUpdateEntity(
+      self.updateComponent,
+      self
+   )
 end
 
 function mouse.update(self, dt)
@@ -84,11 +99,17 @@ function love.draw()
 end
 
 local function update(dt)
-   player:update(dt)
-   mouse:update(dt)
+   if inputController:isPressedThisFrame(1, "leftclick") then
+      print("leftclick")
+   end
+   if inputController:isPressedThisFrame(1, "up") then
+      print("up")
+   end
    --
+   updateSystem:update(dt)
    collisionSystem:update()
    soundSystem:update()
+   inputController:frameEndUpdate()
 end
 
 function love.update(dt)
@@ -124,7 +145,7 @@ function love.focus(focused)
 	if not debugMode then paused = not focused end
 end
 
-function love.keypressed(key)
+--[[function love.keypressed(key)
 	if key == '`' then
 		debugMode = not debugMode
 	end
@@ -134,4 +155,4 @@ function love.keypressed(key)
 	if key == '2' and debugMode then
 		stableMemory = not stableMemory
 	end
-end
+end]]--
