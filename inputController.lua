@@ -35,7 +35,8 @@ local input = {
         right = "d",
         a = "j",
         b = "k"
-     }
+     },
+     buttonsPressedThisFrame = {}
    },
 
    mouseHandler = {
@@ -43,7 +44,8 @@ local input = {
          leftclick = 1,
          rightclick = 2,
          middleclick = 3
-      }
+      },
+      buttonsPressedThisFrame = {}
    }
 }
 
@@ -124,6 +126,22 @@ function input.isDown(self, playerIndex, button)
    return player ~= nil and player.controller.isDown(player.args, button) or false
 end
 
+-- TODO: Add gamepad support
+-- TODO: Add keyboard support
+function input.isPressedThisFrame(self, playerIndex, button)
+   if playerIndex == self.keyboardMousePlayerIndex then
+      local key = input.keyboardHandler.buttonToKey[button]
+      local mouseButtonIndex = input.mouseHandler.buttonToMouseButtonIndex[button]
+
+      if key ~= nil then
+         return self.keyboardHandler.buttonsPressedThisFrame[key] == true
+      end
+      if mouseButtonIndex ~= nil then
+         return self.mouseHandler.buttonsPressedThisFrame[mouseButtonIndex] == true
+      end
+   end
+end
+
 function input.getAxis(self, playerIndex, axis, flags)
    if (playerIndex == self.keyboardMousePlayerIndex) then
       return 0
@@ -201,9 +219,18 @@ function input.gamepadHandler.getAxis(args, axis, flags)
    return 0
 end
 
--- TODO: Figure out what these are for
-function input.pressed(player, button) end
-function input.released(player, button) end
+function input.keyPressedThisFrame(self, key)
+   self.keyboardHandler.buttonsPressedThisFrame[key] = true
+end
+
+function input.mousePressedThisFrame(self, buttonIndex)
+   self.mouseHandler.buttonsPressedThisFrame[buttonIndex] = true
+end
+
+function input.frameEndUpdate(self)
+   self.mouseHandler.buttonsPressedThisFrame = {}
+   self.keyboardHandler.buttonsPressedThisFrame = {}
+end
 
 function input.debugString(self)
    local s =
@@ -291,6 +318,14 @@ function love.gamepadreleased(joystick, button)
    -- Implementation of love2d v0.10.2 api:
    --    https://love2d.org/w/index.php?title=love.gamepadreleased&oldid=11896
    input:gamepadreleased(joystick, button)
+end
+
+function love.keypressed(key, scancode, isrepeat)
+   input:keyPressedThisFrame(key)
+end
+
+function love.mousepressed(x, y, button, istouch)
+   input:mousePressedThisFrame(button)
 end
 
 return input
