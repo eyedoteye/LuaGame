@@ -19,6 +19,37 @@ local entityFactory = require "entityFactory"
 
 local player = require "player"
 
+local mouse = {
+   positionComponent = componentFactory:createComponent("Position", {})
+}
+
+function mouse.load(self)
+   self.crosshairSprite = {}
+   self.crosshairSprite.spriteComponent = spriteController:getSpriteComponentWithSprite(
+      "player",
+      "crosshair"
+   )
+   local _, _, width, height = self.crosshairSprite.spriteComponent.quad:getViewport()
+   self.crosshairSprite.positionOffsetComponent = componentFactory:createComponent(
+      "PositionOffset",
+      {
+         x = -width / 2,
+         y = -height / 2
+      }
+   )
+   self.spriteSystemEntityID = spriteSystem:addSpriteEntity(
+      self.crosshairSprite.spriteComponent,
+      self.positionComponent,
+      self.crosshairSprite.positionOffsetComponent
+   )
+   love.mouse.setVisible(false)
+end
+
+function mouse.update(self, dt)
+   local x, y = love.mouse.getPosition()
+   self.positionComponent.x = x
+   self.positionComponent.y = y
+end
 
 function love.load()
    spriteController:addTexture("player.png", "player")
@@ -28,7 +59,14 @@ function love.load()
       0, 0,
       32, 32
    )
+   spriteController:addQuadToTexture(
+      "player",
+      "crosshair",
+      32, 0,
+      32, 32
+   )
    player:load()
+   mouse:load()
 end
 
 function love.draw()
@@ -55,6 +93,7 @@ end
 
 local function update(dt)
    player:update(dt)
+   mouse:update(dt)
    --
    collisionSystem:update()
    soundSystem:update()
