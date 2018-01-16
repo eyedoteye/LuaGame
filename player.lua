@@ -42,7 +42,7 @@ function player.load(self)
       self.rotationComponent
    )
 end
-local function processInput(self, dt)
+local function processMovementInput(self, dt)
    local x, y = 0, 0
    if inputController:isDown(1, "up") then
       y = y - 1
@@ -60,8 +60,15 @@ local function processInput(self, dt)
    self.positionComponent.x = self.positionComponent.x + x * speed * dt
    self.positionComponent.y = self.positionComponent.y + y * speed * dt
 end
+local function processMouseMovementInput(self)
+   local mouseX, mouseY = love.mouse.getPosition()
+   local xOffset = mouseX - self.positionComponent.x
+   local yOffset = mouseY - self.positionComponent.y
+   self.rotationComponent.rotation = math.atan2(xOffset, -yOffset) / math.pi * 180
+end
 function player.update(self, dt)
-   processInput(self, dt)
+   processMovementInput(self, dt)
+   processMouseMovementInput(self)
 end
 
 return player
