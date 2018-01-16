@@ -20,6 +20,12 @@ local player = {
       {
          radius = 16
       }
+   ),
+   rotationComponent = componentFactory:createComponent(
+      "Rotation",
+      {
+         rotation = 180
+      }
    )
 }
 function player.load(self)
@@ -28,18 +34,12 @@ function player.load(self)
       "player",
       "idle"
    )
-   local _, _, width, height = self.idleSprite.spriteComponent.quad:getViewport()
-   self.idleSprite.positionOffsetComponent = componentFactory:createComponent(
-      "PositionOffset",
-      {
-         x = -width / 2,
-         y = -height / 2
-      }
-   )
+
    self.spriteSystemEntityID = spriteSystem:addSpriteEntity(
       self.idleSprite.spriteComponent,
       self.positionComponent,
-      self.idleSprite.positionOffsetComponent
+      nil,
+      self.rotationComponent
    )
 end
 local function processInput(self, dt)

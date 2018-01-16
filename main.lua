@@ -29,18 +29,10 @@ function mouse.load(self)
       "player",
       "crosshair"
    )
-   local _, _, width, height = self.crosshairSprite.spriteComponent.quad:getViewport()
-   self.crosshairSprite.positionOffsetComponent = componentFactory:createComponent(
-      "PositionOffset",
-      {
-         x = -width / 2,
-         y = -height / 2
-      }
-   )
+
    self.spriteSystemEntityID = spriteSystem:addSpriteEntity(
       self.crosshairSprite.spriteComponent,
-      self.positionComponent,
-      self.crosshairSprite.positionOffsetComponent
+      self.positionComponent
    )
    love.mouse.setVisible(false)
 end

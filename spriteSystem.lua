@@ -40,13 +40,15 @@ function spriteSystem.addSpriteEntity(
    spriteComponent,
    positionComponent,
    positionOffsetComponent,
-   rotationComponent
+   rotationComponent,
+   originOffsetComponent
 )
    local id = self.entityMap:createAndAddEntity({
       spriteComponent = spriteComponent,
       positionComponent = positionComponent,
       positionOffsetComponent = positionOffsetComponent,
-      rotationComponent = rotationComponent
+      rotationComponent = rotationComponent,
+      originOffsetComponent = originOffsetComponent
    })
 
    return id
@@ -88,6 +90,14 @@ local function render(
    if rotationComponent ~= nil then
       rotation = rotationComponent.rotation
    end
+   local originXOffset, originYOffset = 0, 0
+   if originOffsetComponent ~= nil then
+      originXOffset = originOffsetComponent.x
+      originYOffset = originOffsetComponent.y
+   end
+   local _, _, width, height = spriteComponent.quad:getViewport()
+   local originX = width / 2
+   local originY = height / 2
 
    -- Intentional mutation of non-standard global variable 'love'
    -- Implementation of love2d v0.10.2 api:
@@ -95,11 +105,11 @@ local function render(
    love.graphics.draw(
       spriteComponent.texture,
       spriteComponent.quad,
-      positionComponent.x,
-      positionComponent.y,
+      positionComponent.x + xOffset,
+      positionComponent.y + yOffset,
       rotation * math.pi / 180,
       1, 1,
-      -xOffset, -yOffset
+      originX + originXOffset, originY + originYOffset
    )
 end
 
@@ -110,7 +120,8 @@ function spriteSystem.draw(self)
          spriteEntity.spriteComponent,
          spriteEntity.positionComponent,
          spriteEntity.positionOffsetComponent,
-         spriteEntity.rotationComponent
+         spriteEntity.rotationComponent,
+         spriteEntity.originOffsetComponent
       )
    end
 end

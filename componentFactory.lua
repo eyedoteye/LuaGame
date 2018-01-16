@@ -71,6 +71,14 @@ local componentFactory ={
             y = properties.y
          }
          return component
+      end,
+
+      ["Rotation"] = function(properties)
+         local component = {
+            name = "Rotation",
+            rotation = properties.rotation
+         }
+         return component
       end
    }
 }
