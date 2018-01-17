@@ -135,7 +135,7 @@ local player = {
       }
    )
 }
-function player.load(self)
+function player.init(self)
    self.idleSprite = {}
    self.idleSprite.spriteComponent = spriteController:getSpriteComponentWithSprite(
       "player",

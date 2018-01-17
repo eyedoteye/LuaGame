@@ -43,8 +43,8 @@ function love.load()
       64, 0,
       32, 32
    )
-   player:load()
-   mouse:load()
+   player:init()
+   mouse:init()
 end
 
 function love.draw()

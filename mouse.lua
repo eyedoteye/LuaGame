@@ -40,7 +40,7 @@ function mouse.load(self)
    )
 end
 
-function mouse.update(self, dt)
+function mouse.init(self, dt)
    local x, y = love.mouse.getPosition()
    self.positionComponent.x = x
    self.positionComponent.y = y
