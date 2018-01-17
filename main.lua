@@ -37,6 +37,12 @@ function love.load()
       32, 0,
       32, 32
    )
+   spriteController:addQuadToTexture(
+      "player",
+      "fireball",
+      64, 0,
+      32, 32
+   )
    player:load()
    mouse:load()
 end

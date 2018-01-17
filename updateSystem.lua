@@ -30,6 +30,7 @@ function updateSystem.removeUpdateEntity(self, id)
 end
 
 function updateSystem.update(self, dt)
+
    for __, updateEntity in ipairs(self.entityMap:getList()) do
       updateEntity.updateComponent.update(updateEntity, dt)
    end
