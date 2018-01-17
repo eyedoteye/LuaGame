@@ -79,7 +79,8 @@ local function render(
    spriteComponent,
    positionComponent,
    positionOffsetComponent,
-   rotationComponent
+   rotationComponent,
+   originOffsetComponent
 )
    local xOffset, yOffset = 0, 0
    if positionOffsetComponent ~= nil then
@@ -105,11 +106,12 @@ local function render(
    love.graphics.draw(
       spriteComponent.texture,
       spriteComponent.quad,
-      positionComponent.x + xOffset,
-      positionComponent.y + yOffset,
+      math.floor(positionComponent.x + xOffset),
+      math.floor(positionComponent.y + yOffset),
       rotation * math.pi / 180,
       1, 1,
-      originX + originXOffset, originY + originYOffset
+      math.floor(originX + originXOffset),
+      math.floor(originY + originYOffset)
    )
 end
 
