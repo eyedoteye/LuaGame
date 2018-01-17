@@ -36,7 +36,8 @@ local input = {
         a = "j",
         b = "k"
      },
-     buttonsPressedThisFrame = {}
+     buttonsPressedThisFrame = {},
+     buttonsReleasedThisFrame = {}
    },
 
    mouseHandler = {
@@ -45,7 +46,8 @@ local input = {
          rightclick = 2,
          middleclick = 3
       },
-      buttonsPressedThisFrame = {}
+      buttonsPressedThisFrame = {},
+      buttonsReleasedThisFrame = {}
    }
 }
 
@@ -142,6 +144,20 @@ function input.isPressedThisFrame(self, playerIndex, button)
    end
 end
 
+function input.isReleasedThisFrame(self, playerIndex, button)
+   if playerIndex == self.keyboardMousePlayerIndex then
+      local key = input.keyboardHandler.buttonToKey[button]
+      local mouseButtonIndex = input.mouseHandler.buttonToMouseButtonIndex[button]
+
+      if key ~= nil then
+         return self.keyboardHandler.buttonsReleasedThisFrame[key] == true
+      end
+      if mouseButtonIndex ~= nil then
+         return self.mouseHandler.buttonsReleasedThisFrame[mouseButtonIndex] == true
+      end
+   end
+end
+
 function input.getAxis(self, playerIndex, axis, flags)
    if (playerIndex == self.keyboardMousePlayerIndex) then
       return 0
@@ -227,9 +243,19 @@ function input.mousePressedThisFrame(self, buttonIndex)
    self.mouseHandler.buttonsPressedThisFrame[buttonIndex] = true
 end
 
+function input.keyReleasedThisFrame(self, key)
+   self.keyboardHandler.buttonsReleasedThisFrame[key] = true
+end
+
+function input.mouseReleasedThisFrame(self, buttonIndex)
+   self.mouseHandler.buttonsReleasedThisFrame[buttonIndex] = true
+end
+
 function input.frameEndUpdate(self)
-   self.mouseHandler.buttonsPressedThisFrame = {}
    self.keyboardHandler.buttonsPressedThisFrame = {}
+   self.mouseHandler.buttonsPressedThisFrame = {}
+   self.keyboardHandler.buttonsReleasedThisFrame = {}
+   self.mouseHandler.buttonsReleasedThisFrame = {}
 end
 
 function input.debugString(self)
@@ -326,6 +352,14 @@ end
 
 function love.mousepressed(x, y, button, istouch)
    input:mousePressedThisFrame(button)
+end
+
+function love.keyreleased(key, scancode)
+   input:keyReleasedThisFrame(key)
+end
+
+function love.mousereleased(x, y, button, istouch)
+   input:mouseReleasedThisFrame(button)
 end
 
 return input

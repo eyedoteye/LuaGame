@@ -105,6 +105,12 @@ local function update(dt)
    if inputController:isPressedThisFrame(1, "up") then
       print("up")
    end
+   if inputController:isReleasedThisFrame(1, "leftclick") then
+      print("leftclick released")
+   end
+   if inputController:isReleasedThisFrame(1, "up") then
+      print("up released")
+   end
    --
    updateSystem:update(dt)
    collisionSystem:update()
