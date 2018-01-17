@@ -34,7 +34,7 @@ local function fireball_update(updateEntity, dt)
    end
 end
 
-function fireball_init(self)
+local function fireball_init(self)
    self.fireballSprite = spriteController:getSpriteComponentWithSprite(
       "player",
       "fireball"
@@ -50,6 +50,29 @@ function fireball_init(self)
       self
    )
    self.lifetime = 1
+end
+
+local function fireball_create(
+   x, y,
+   rotation
+)
+   local fireball = {
+      positionComponent = componentFactory:createComponent(
+         "Position",
+         {
+            x = x,
+            y = y
+         }
+      ),
+      rotationComponent = componentFactory:createComponent(
+         "Rotation",
+         {
+            rotation = rotation
+         }
+      ),
+      updateComponent = componentFactory:createComponent("Update", {update = fireball_update})
+   }
+   fireball_init(fireball)
 end
 
 local function processMovementInput(self, dt)
@@ -79,23 +102,11 @@ local function processMouseMovementInput(self)
 end
 
 local function shootFireball(self)
-   local fireball = {
-      positionComponent = componentFactory:createComponent(
-         "Position",
-         {
-            x = self.positionComponent.x,
-            y = self.positionComponent.y
-         }
-      ),
-      rotationComponent = componentFactory:createComponent(
-         "Rotation",
-         {
-            rotation = self.rotationComponent.rotation
-         }
-      ),
-      updateComponent = componentFactory:createComponent("Update",{update = fireball_update})
-   }
-   fireball_init(fireball)
+   fireball_create(
+      self.positionComponent.x,
+      self.positionComponent.y,
+      self.rotationComponent.rotation
+   )
 end
 
 local function update(updateEntity, dt)
