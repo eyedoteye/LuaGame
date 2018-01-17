@@ -2,7 +2,9 @@ local inputController = require "inputController"
 local spriteController = require "spriteController"
 local spriteSystem = require "spriteSystem"
 local updateSystem = require "updateSystem"
+
 local componentFactory = require "componentFactory"
+
 
 
 local function processMovementInput(self, dt)
