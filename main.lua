@@ -79,7 +79,7 @@ end
 
 local function update(dt)
    if inputController:isPressedThisFrame(1, "rightclick") then
-      createEnemy(love.mouse.getX(), love.mouse.getY(), 0)
+      createEnemy(love.mouse.getX(), love.mouse.getY(), 0, player.positionComponent)
    end
    --
    updateSystem:update(dt)

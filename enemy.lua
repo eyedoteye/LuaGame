@@ -1,14 +1,15 @@
 local spriteController = require "spriteController"
 local spriteSystem = require "spriteSystem"
 local collisionSystem = require "collisionSystem"
+local updateSystem = require "updateSystem"
 
 local componentFactory = require "componentFactory"
-
-local clearTable = require "clearTable"
+local rotationTools = require "rotationTools"
 
 local function deleteEnemy(self)
    spriteSystem:removeSpriteEntity(self.spriteSystemEntityID)
    collisionSystem:removeCollisionEntity(self.collisionSystemEntityID)
+   updateSystem:removeUpdateEntity(self.updateSystemEntityID)
 end
 
 local function resolveCollision(selfCollisionEntity, otherCollisionEntity, data)
@@ -17,7 +18,19 @@ local function resolveCollision(selfCollisionEntity, otherCollisionEntity, data)
    end
 end
 
-local function createEnemy(x, y, rotation)
+local function update(selfUpdateEntity)
+   local self = selfUpdateEntity.parent
+   self.rotationComponent.rotation = rotationTools:getRotationFromPointToPoint(
+      self.positionComponent.x, self.positionComponent.y,
+      self.playerPositionComponent.x, self.playerPositionComponent.y
+   )
+end
+
+local function createEnemy(
+   x, y,
+   rotation,
+   playerPositionComponent
+)
    local enemy = {
       entityTypeComponent = componentFactory:createComponent(
          "EntityType",
@@ -44,8 +57,15 @@ local function createEnemy(x, y, rotation)
             radius = 16,
             resolveCollision = resolveCollision
          }
+      ),
+      updateComponent = componentFactory:createComponent(
+         "Update",
+         {
+            update = update
+         }
       )
    }
+   enemy.playerPositionComponent = playerPositionComponent
 
    enemy.idleSprite = spriteController:getSpriteComponentWithSprite(
       "player",
@@ -62,6 +82,10 @@ local function createEnemy(x, y, rotation)
       enemy.entityTypeComponent,
       enemy.positionComponent,
       enemy.colliderComponent,
+      enemy
+   )
+   enemy.updateSystemEntityID = updateSystem:addUpdateEntity(
+      enemy.updateComponent,
       enemy
    )
 end
