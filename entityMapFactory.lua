@@ -26,7 +26,7 @@ end
 --- Gets number of entities currently in the map.
 -- @return number: An integer representing the number of entities currently in the map.
 local function entityMap_getSize(self)
-   return self.size
+   return #self.entities
 end
 
 --- Add an entity to the map.
@@ -34,9 +34,8 @@ end
 local function entityMap_createAndAddEntity(self, components)
    local entity = entityFactory:createEntity(components)
 
-   local index = self.size + 1
+   local index = #self.entities + 1
    self.entities[index] = entity
-   self.size = self.size + 1
    self.idToIndex[entity.id] = index
 
    return entity.id
@@ -53,9 +52,9 @@ local function entityMap_remove(self, id)
    --local entity = self.entities[index]
    --clearTable(entity)
 
-   if self.size > 1 and index ~= self.size then
-      local replacementEntity = self.entities[self.size]
-      self.entities[self.size] = nil
+   if #self.entities > 1 and index ~= #self.entities then
+      local replacementEntity = self.entities[#self.entities]
+      self.entities[#self.entities] = nil
 
       self.idToIndex[replacementEntity.id] = index
       self.entities[index] = replacementEntity
@@ -65,8 +64,6 @@ local function entityMap_remove(self, id)
 
    self.idToIndex[id] = nil
    entityFactory:relieveID(id)
-
-   self.size = self.size - 1
 end
 
 --- Creates a new entityMap.
@@ -75,7 +72,6 @@ end
 function entityMapFactory.create(self)
    local list = {
       entities = {},
-      size = 0,
       idToIndex = {},
 
       get = entityMap_get,
