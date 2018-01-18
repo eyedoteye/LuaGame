@@ -20,6 +20,7 @@ local function fireball_delete(self)
    spriteSystem:removeSpriteEntity(self.spriteSystemEntityID)
    updateSystem:removeUpdateEntity(self.updateSystemEntityID)
    collisionSystem:removeCollisionEntity(self.collisionSystemEntityID)
+   self.deleted = true
 --   clearTable(self.updateComponent)
 --   clearTable(self.positionComponent)
 --   clearTable(self.rotationComponent)
@@ -29,7 +30,9 @@ end
 
 local function fireball_resolveCollision(selfCollisionEntity, otherCollisionEntity, data)
    if otherCollisionEntity.parent.entityTypeComponent.type == "Enemy" then
-      fireball_delete(selfCollisionEntity.parent)
+      if not selfCollisionEntity.parent.deleted then
+         fireball_delete(selfCollisionEntity.parent)
+      end
    end
 end
 
