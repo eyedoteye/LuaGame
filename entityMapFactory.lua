@@ -50,8 +50,8 @@ local function entityMap_remove(self, id)
       error("entityMap_remove: id does not exist in map.")
    end
 
-   local entity = self.entities[index]
-   clearTable(entity)
+   --local entity = self.entities[index]
+   --clearTable(entity)
 
    if self.size > 1 and index ~= self.size then
       local replacementEntity = self.entities[self.size]

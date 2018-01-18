@@ -291,9 +291,11 @@ local function collideAllEntities(self)
 
    for _, collisionPair in ipairs(collisions) do
       if collisionPair[1].colliderComponent.resolveCollision ~= nil then
+         print(collisionPair[1].entityTypeComponent.type)
          collisionPair[1].colliderComponent.resolveCollision(collisionPair[1], collisionPair[2], collisionPair[3])
       end
       if collisionPair[2].colliderComponent.resolveCollision ~= nil then
+         print(collisionPair[2].entityTypeComponent.type)
          collisionPair[3].firstToSecondDirection.x = -collisionPair[3].firstToSecondDirection.x
          collisionPair[3].firstToSecondDirection.y = -collisionPair[3].firstToSecondDirection.y
          collisionPair[3].secondToFirstDirection.x = -collisionPair[3].secondToFirstDirection.x

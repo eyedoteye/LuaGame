@@ -2,6 +2,7 @@ local inputController = require "inputController"
 local spriteController = require "spriteController"
 local spriteSystem = require "spriteSystem"
 local updateSystem = require "updateSystem"
+local collisionSystem = require "collisionSystem"
 
 local componentFactory = require "componentFactory"
 
@@ -18,15 +19,22 @@ end
 local function fireball_delete(self)
    spriteSystem:removeSpriteEntity(self.spriteSystemEntityID)
    updateSystem:removeUpdateEntity(self.updateSystemEntityID)
-   clearTable(self.updateComponent)
-   clearTable(self.positionComponent)
-   clearTable(self.rotationComponent)
-   clearTable(self.fireballSprite)
-   clearTable(self)
+   collisionSystem:removeCollisionEntity(self.collisionSystemEntityID)
+--   clearTable(self.updateComponent)
+--   clearTable(self.positionComponent)
+--   clearTable(self.rotationComponent)
+--   clearTable(self.fireballSprite)
+--   clearTable(self)
+end
+
+local function fireball_resolveCollision(selfCollisionEntity, otherCollisionEntity, data)
+   if otherCollisionEntity.parent.entityTypeComponent.type == "Enemy" then
+      fireball_delete(selfCollisionEntity.parent)
+   end
 end
 
 local function fireball_update(updateEntity, dt)
-   self = updateEntity.parent
+   local self = updateEntity.parent
    fireball_moveForward(self, dt)
    self.lifetime = self.lifetime - dt
    if self.lifetime <= 0 then
@@ -49,6 +57,12 @@ local function fireball_init(self)
       self.updateComponent,
       self
    )
+   self.collisionSystemEntityID = collisionSystem:addCollisionEntity(
+      self.entityTypeComponent,
+      self.positionComponent,
+      self.colliderComponent,
+      self
+   )
    self.lifetime = 1
 end
 
@@ -57,6 +71,12 @@ local function fireball_create(
    rotation
 )
    local fireball = {
+      entityTypeComponent = componentFactory:createComponent(
+         "EntityType",
+         {
+            type = "Fireball"
+         }
+      ),
       positionComponent = componentFactory:createComponent(
          "Position",
          {
@@ -70,7 +90,19 @@ local function fireball_create(
             rotation = rotation
          }
       ),
-      updateComponent = componentFactory:createComponent("Update", {update = fireball_update})
+      updateComponent = componentFactory:createComponent(
+         "Update",
+         {
+            update = fireball_update
+         }
+      ),
+      colliderComponent = componentFactory:createComponent(
+         "Collider.Circle",
+         {
+            radius = 8,
+            resolveCollision = fireball_resolveCollision
+         }
+      )
    }
    fireball_init(fireball)
 end

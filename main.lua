@@ -22,6 +22,7 @@ local entityFactory = require "entityFactory"
 local player = require "player"
 local mouse = require "mouse"
 
+local createEnemy = require "enemy"
 
 function love.load()
    spriteController:addTexture("player.png", "player")
@@ -43,6 +44,13 @@ function love.load()
       64, 0,
       32, 32
    )
+   spriteController:addQuadToTexture(
+      "player",
+      "enemy",
+      0, 32,
+      32, 32
+   )
+   collisionSystem:makeEntitiesCollidable({type = "Enemy"},{type = "Fireball"})
    player:init()
    mouse:init()
 end
@@ -70,17 +78,8 @@ function love.draw()
 end
 
 local function update(dt)
-   if inputController:isPressedThisFrame(1, "leftclick") then
-      print("leftclick")
-   end
-   if inputController:isPressedThisFrame(1, "up") then
-      print("up")
-   end
-   if inputController:isReleasedThisFrame(1, "leftclick") then
-      print("leftclick released")
-   end
-   if inputController:isReleasedThisFrame(1, "up") then
-      print("up released")
+   if inputController:isPressedThisFrame(1, "rightclick") then
+      createEnemy(love.mouse.getX(), love.mouse.getY(), 0)
    end
    --
    updateSystem:update(dt)
