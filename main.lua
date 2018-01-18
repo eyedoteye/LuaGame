@@ -122,7 +122,9 @@ function love.focus(focused)
 	if not debugMode then paused = not focused end
 end
 
---[[function love.keypressed(key)
+local love_keypressed = love.keypressed
+function love.keypressed(key)
+   love_keypressed(key)
 	if key == '`' then
 		debugMode = not debugMode
 	end
@@ -132,4 +134,4 @@ end
 	if key == '2' and debugMode then
 		stableMemory = not stableMemory
 	end
-end]]--
+end
