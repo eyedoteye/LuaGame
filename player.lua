@@ -150,6 +150,12 @@ local function update(updateEntity, dt)
    if inputController:isPressedThisFrame(1, "leftclick") then
       shootFireball(updateEntity.parent)
    end
+   local self = updateEntity.parent
+   self.fireballTimer = self.fireballTimer - dt 
+   if self.fireballTimer <= 0 then
+      self.fireballTimer = .05
+      shootFireball(self)
+   end
 end
 
 local screenWidth, screenHeight = love.graphics.getDimensions()
@@ -199,6 +205,7 @@ function player.init(self)
       self.updateComponent,
       self
    )
+   self.fireballTimer = 10
 end
 
 return player

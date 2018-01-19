@@ -5,7 +5,8 @@ local entityFactory = {
 local function resolveCollision(usedIDs, id)
    local collisions = 1
    while collisions < 3 and usedIDs[id] ~= nil do
-      id = tostring(math.random())
+      --id = tostring(math.random())
+      id = math.random()
       collisions = collisions + 1
    end
    if collisions == 3 then
@@ -18,7 +19,8 @@ end
 function entityFactory.createEntity(self, entityComponents)
    local entity = entityComponents
 
-   local id = tostring(math.random())
+   --local id = tostring(math.random())
+   local id = math.random()
    if self.usedIDs[id] ~= nil then
       id = resolveCollision(self.usedIDs, id)
    end
