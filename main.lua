@@ -20,7 +20,7 @@ local entityFactory = require "entityFactory"
 
 
 --local player = require "player"
-local mouse = require "mouse"
+local mousePrototype = require "mousePrototype"
 
 --local createEnemy = require "enemy"
 
@@ -52,7 +52,7 @@ function love.load()
    )
    collisionSystem:makeEntityTypesCollidable("Enemy","Fireball")
 --   player:init()
-   mouse:init()
+   mousePrototype:create()
 end
 
 function love.draw()

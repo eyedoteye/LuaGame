@@ -17,7 +17,6 @@ function updateSystem.addEntity(
    entity
 )
    self.entityMap:add(entity)
-   print("hi")
 end
 
 function updateSystem.removeEntity(self, id)
