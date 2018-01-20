@@ -30,6 +30,7 @@ function mousePrototype.create()
    updateSystem:addEntity(mouse)
 
    love.mouse.setVisible(false)
+
    return mouse
 end
 

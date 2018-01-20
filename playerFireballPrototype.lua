@@ -1,4 +1,24 @@
-local function fireball_moveForward(self, dt)
+local spriteSystem = require "spriteSystem"
+local updateSystem = require "updateSystem"
+local collisionSystem = require "collisionSystem"
+local spriteController = require "spriteController"
+
+local componentFactory = require "componentFactory"
+local entityFactory = require "entityFactory"
+
+local function delete(self)
+   spriteSystem:removeEntity(self.id)
+   updateSystem:removeEntity(self.id)
+   collisionSystem:removeEntity(self.id)
+end
+
+local function resolveCollision(self, other, data)
+   if other.entityTypeComponent.type == "Enemy" then
+      delete(self)
+   end
+end
+
+local function moveForward(self, dt)
    local xDir = math.cos((self.rotationComponent.rotation - 90) * math.pi / 180)
    local yDir = math.sin((self.rotationComponent.rotation - 90) * math.pi / 180)
    local moveSpeed = 200
@@ -6,61 +26,22 @@ local function fireball_moveForward(self, dt)
    self.positionComponent.y = self.positionComponent.y + yDir * moveSpeed * dt
 end
 
-local function fireball_delete(self)
-   spriteSystem:removeSpriteEntity(self.spriteSystemEntityID)
-   updateSystem:removeUpdateEntity(self.updateSystemEntityID)
-   collisionSystem:removeCollisionEntity(self.collisionSystemEntityID)
---   clearTable(self.updateComponent)
---   clearTable(self.positionComponent)
---   clearTable(self.rotationComponent)
---   clearTable(self.fireballSprite)
---   clearTable(self)
-end
-
-local function fireball_resolveCollision(selfCollisionEntity, otherCollisionEntity, data)
-   if otherCollisionEntity.parent.entityTypeComponent.type == "Enemy" then
-      fireball_delete(selfCollisionEntity.parent)
-   end
-end
-
-local function fireball_update(updateEntity, dt)
-   local self = updateEntity.parent
-   fireball_moveForward(self, dt)
+local function update(self, dt)
+   moveForward(self, dt)
    self.lifetime = self.lifetime - dt
    if self.lifetime <= 0 then
-      fireball_delete(self)
+      delete(self)
    end
 end
 
-local function fireball_init(self)
-   self.fireballSprite = spriteController:getSpriteComponentWithSprite(
-      "player",
-      "fireball"
-   )
-   self.spriteSystemEntityID = spriteSystem:addSpriteEntity(
-      self.fireballSprite,
-      self.positionComponent,
-      nil,
-      self.rotationComponent
-   )
-   self.updateSystemEntityID = updateSystem:addUpdateEntity(
-      self.updateComponent,
-      self
-   )
-   self.collisionSystemEntityID = collisionSystem:addCollisionEntity(
-      self.entityTypeComponent,
-      self.positionComponent,
-      self.colliderComponent,
-      self
-   )
-   self.lifetime = 1
-end
+local playerFireballPrototype = {}
 
-local function fireball_create(
+function playerFireballPrototype.create(
+   self,
    x, y,
    rotation
 )
-   local fireball = {
+   local fireball = entityFactory:createEntity({
       entityTypeComponent = componentFactory:createComponent(
          "EntityType",
          {
@@ -83,16 +64,29 @@ local function fireball_create(
       updateComponent = componentFactory:createComponent(
          "Update",
          {
-            update = fireball_update
+            update = update
          }
       ),
       colliderComponent = componentFactory:createComponent(
          "Collider.Circle",
          {
             radius = 8,
-            resolveCollision = fireball_resolveCollision
+            resolveCollision = resolveCollision
          }
+      ),
+      spriteComponent = spriteController:getSpriteComponentWithSprite(
+         "player",
+         "fireball"
       )
-   }
-   fireball_init(fireball)
+   })
+
+   spriteSystem:addEntity(fireball)
+   updateSystem:addEntity(fireball)
+   collisionSystem:addEntity(fireball)
+
+   fireball.lifetime = 1
+
+   return fireball
 end
+
+return playerFireballPrototype

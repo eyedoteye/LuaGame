@@ -6,6 +6,8 @@ local updateSystem = require "updateSystem"
 local componentFactory = require "componentFactory"
 local entityFactory = require "entityFactory"
 
+local playerFireballPrototype = require "playerFireballPrototype"
+
 local function processMovementInput(self, dt)
    local x, y = 0, 0
    if inputController:isDown(1, "up") then
@@ -32,20 +34,20 @@ local function processMouseMovementInput(self)
    self.rotationComponent.rotation = math.atan2(xOffset, -yOffset) / math.pi * 180
 end
 
---local function shootFireball(self)
---   fireball_create(
---      self.positionComponent.x,
---      self.positionComponent.y,
---      self.rotationComponent.rotation
---   )
---end
+local function shootFireball(self)
+   playerFireballPrototype:create(
+      self.positionComponent.x,
+      self.positionComponent.y,
+      self.rotationComponent.rotation
+   )
+end
 
 local function update(self, dt)
    processMovementInput(self, dt)
    processMouseMovementInput(self)
---   if inputController:isPressedThisFrame(1, "leftclick") then
---      shootFireball(updateEntity.parent)
---   end
+   if inputController:isPressedThisFrame(1, "leftclick") then
+      shootFireball(self)
+   end
 end
 
 local playerPrototype = {}

@@ -42,33 +42,23 @@ local collisionSystem = {
    entityMap = entityMapFactory:create() -- entityMap: Stores all collision entities.
 }
 
---- Adds a collisionEntity to the collision system.
+--- Adds an entity to the collision system.
 -- @param entityTypeComponent entityTypeComponent: Entity type of entity.
 -- @param positionComponent positionComponent: Position of entity.
 -- @param colliderComponent colliderComponent: Collider of entity.
 -- @param parent entity: Parent entity from which these components are from.
 --                       This is used in conjuction with resolveCollision in colliderComponent.
 -- @return number: This system's ID of the collisionEntity.
-function collisionSystem.addCollisionEntity(
+function collisionSystem.addEntity(
    self,
-   entityTypeComponent,
-   positionComponent,
-   colliderComponent,
-   parent
+   entity
 )
-   local id = self.entityMap:createAndAddEntity({
-      entityTypeComponent = entityTypeComponent,
-      positionComponent = positionComponent,
-      colliderComponent = colliderComponent,
-      parent = parent
-   })
-
-   return id
+   self.entityMap:add(entity)
 end
 
---- Removes a collisionEntity from the collision system.
+--- Removes an entity from the collision system.
 -- @param id string: This system's ID of the entity to remove.
-function collisionSystem.removeCollisionEntity(self, id)
+function collisionSystem.removeEntity(self, id)
    self.entityMap:remove(id)
 end
 
