@@ -51,7 +51,7 @@ local function update(self, dt)
    if self.autoFireball then
       self.autoFireballCooldown = self.autoFireballCooldown - dt
       if self.autoFireballCooldown <= 0 then
-         self.autoFireballCooldown = 0.05
+         self.autoFireballCooldown = 0.1
          shootFireball(self)
       end
    end
@@ -74,7 +74,7 @@ function playerPrototype.create(self, x, y)
       colliderComponent = componentFactory:createComponent(
          "Collider.Circle",
          {
-            radius = 16
+            radius = 14
          }
       ),
       rotationComponent = componentFactory:createComponent(

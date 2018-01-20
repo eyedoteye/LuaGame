@@ -57,7 +57,7 @@ function enemyPrototype.create(
       colliderComponent = componentFactory:createComponent(
          "Collider.Circle",
          {
-            radius = 16,
+            radius = 14,
             resolveCollision = resolveCollision
          }
       ),
