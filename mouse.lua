@@ -15,21 +15,17 @@ end
 
 local mouse = entityFactory:createEntity({
    positionComponent = componentFactory:createComponent("Position", {}),
-   updateComponent = componentFactory:createComponent("Update", {update = update})
+   updateComponent = componentFactory:createComponent("Update", {update = update}),
 })
 
 function mouse.init(self)
    print("hello")
-   self.crosshairSprite = {}
-   self.crosshairSprite.spriteComponent = spriteController:getSpriteComponentWithSprite(
+
+   mouse.spriteComponent = spriteController:getSpriteComponentWithSprite(
       "player",
       "crosshair"
    )
-
-   self.spriteSystemEntityID = spriteSystem:addSpriteEntity(
-      self.crosshairSprite.spriteComponent,
-      self.positionComponent
-   )
+   spriteSystem:addEntity(self)
    love.mouse.setVisible(false)
 
    updateSystem:addEntity(self)

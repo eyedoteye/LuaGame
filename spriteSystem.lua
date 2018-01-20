@@ -35,41 +35,24 @@ local spriteSystem = {
 -- @param positionOffsetComponent positionOffsetComponent: How much the sprite must be shifted
 --                                                         from the entity's position when displayed.
 -- @return number: This system's ID of the sprite entity.
-function spriteSystem.addSpriteEntity(
+function spriteSystem.addEntity(
    self,
-   spriteComponent,
-   positionComponent,
-   rotationComponent,
-   originOffsetComponent
+   entity
 )
-   local id = self.entityMap:createAndAddEntity({
-      spriteComponent = spriteComponent,
-      positionComponent = positionComponent,
-      rotationComponent = rotationComponent,
-      originOffsetComponent = originOffsetComponent
-   })
-
-   return id
+   self.entityMap:add(entity)
 end
 
 --- Removes a spriteEntity from the sprite system.
 -- @param id string: This system's ID of the entity to remove.
-function spriteSystem.removeSpriteEntity(self, id)
+function spriteSystem.removeEntity(self, id)
    self.entityMap:remove(id)
 end
 
 --- Checks to see if a spriteEntity exists within this system by ID.
 -- @param id string: This system's ID of the entity to check for.
 -- @return bool: Whether the entity exists in this system or not.
-function spriteSystem.hasSpriteEntity(self, id)
+function spriteSystem.hasEntity(self, id)
    return self.entityMap:get(id) ~= nil
-end
-
---- Gets a spriteEntity within this system by ID.
--- @param id string: This system's ID of the entity to get.
--- @return spriteEntity: The spriteEntity matching the given ID.
-function spriteSystem.getSpriteEntity(self, id)
-   return self.entityMap:get(id)
 end
 
 --- Renders all spriteEntitys.
@@ -109,12 +92,12 @@ end
 
 --- Renders all spriteEntitys.
 function spriteSystem.draw(self)
-   for _, spriteEntity in ipairs(self.entityMap:getList()) do
+   for _, entity in ipairs(self.entityMap:getList()) do
       render(
-         spriteEntity.spriteComponent,
-         spriteEntity.positionComponent,
-         spriteEntity.rotationComponent,
-         spriteEntity.originOffsetComponent
+         entity.spriteComponent,
+         entity.positionComponent,
+         entity.rotationComponent,
+         entity.originOffsetComponent
       )
    end
 end
