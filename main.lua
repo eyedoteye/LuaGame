@@ -50,7 +50,7 @@ function love.load()
       0, 32,
       32, 32
    )
-   collisionSystem:makeEntitiesCollidable({type = "Enemy"},{type = "Fireball"})
+   collisionSystem:makeEntityTypesCollidable("Enemy","Fireball")
    player:init()
    mouse:init()
 end

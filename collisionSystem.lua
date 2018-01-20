@@ -73,21 +73,45 @@ function collisionSystem.removeCollisionEntity(self, id)
 end
 
 --- Turns on collision checking between two entity types.
--- @param firstEntityType entityTypeComponent: Type name of the first entity to make collidable.
--- @param secondEntityType entityTypeComponent: Type name of the second entity to make collidable.
-function collisionSystem.makeEntitiesCollidable(self, firstEntityType, secondEntityType)
-   self.collidableMap[firstEntityType.type] = self.collidableMap[firstEntityType.type] or {}
-   self.collidableMap[secondEntityType.type] = self.collidableMap[secondEntityType.type] or {}
-   self.collidableMap[firstEntityType.type][secondEntityType.type] = true
-   self.collidableMap[secondEntityType.type][firstEntityType.type] = true
+-- @param firstEntityType entityTypeComponent or string: EntityType of the first entity to make collidable.
+-- @param secondEntityType entityTypeComponent or string: EntityType of the second entity to make collidable.
+function collisionSystem.makeEntityTypesCollidable(self, firstEntityType, secondEntityType)
+   if type(firstEntityType) == "table" then
+      assert(firstEntityType.name == "EntityType", "firstEntityType is neither an entityTypeComponent nor a string")
+      firstEntityType = firstEntityType.type
+   else
+      assert(type(firstEntityType) == "string", "firstEntityType is neither an entityTypeComponent nor a string")
+   end
+   if type(secondEntityType) == "table" then
+      assert(secondEntityType.name == "EntityType", "secondEntityType is neither an entityTypeComponent nor a string")
+      secondEntityType = secondEntityType.type
+   else
+      assert(type(secondEntityType) == "string", "secondEntityType is neither an entityTypeComponent nor a string")
+   end
+   self.collidableMap[firstEntityType] = self.collidableMap[firstEntityType] or {}
+   self.collidableMap[secondEntityType] = self.collidableMap[secondEntityType] or {}
+   self.collidableMap[firstEntityType][secondEntityType] = true
+   self.collidableMap[secondEntityType][firstEntityType] = true
 end
 
 --- Turns off collision checking between two entity types.
--- @param firstEntityType entityTypeComponent: Type name of the first entity to make uncollidable.
--- @param secondEntityType entityTypeComponent: Type name of the second entity to make uncollidable.
-function collisionSystem.unmakeEntitiesCollidable(self, firstEntityType, secondEntityType)
-   self.collidableMap[firstEntityType.type][secondEntityType.type] = nil
-   self.collidableMap[secondEntityType.type][firstEntityType.type] = nil
+-- @param firstEntityType entityTypeComponent: EntityType name of the first entity to make uncollidable.
+-- @param secondEntityType entityTypeComponent: EntityType name of the second entity to make uncollidable.
+function collisionSystem.unmakeEntityTypesCollidable(self, firstEntityType, secondEntityType)
+   if type(firstEntityType) == "table" then
+      assert(firstEntityType.name == "EntityType", "firstEntityType is neither an entityTypeComponent nor a string")
+      firstEntityType = firstEntityType.type
+   else
+      assert(type(firstEntityType) == "string", "firstEntityType is neither an entityTypeComponent nor a string")
+   end
+   if type(secondEntityType) == "table" then
+      assert(secondEntityType.name == "EntityType", "secondEntityType is neither an entityTypeComponent nor a string")
+      secondEntityType = secondEntityType.type
+   else
+      assert(type(secondEntityType) == "string", "secondEntityType is neither an entityTypeComponent nor a string")
+   end
+   self.collidableMap[firstEntityType][secondEntityType] = nil
+   self.collidableMap[secondEntityType][firstEntityType] = nil
 end
 
 --- Returns if two entity types are collidable.
