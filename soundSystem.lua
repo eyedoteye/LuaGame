@@ -31,45 +31,36 @@ local soundSystem = {
 -- @param positionComponent positionComponent: Position of entity.
 -- @param finishedCallbackComponent finishedCallbackComponent: Function to call after sound effect has finished.
 -- @return number: This system's ID of the soundEntity.
-function soundSystem.addSoundEntity(
+function soundSystem.addEntity(
    self,
-   soundEffectComponent,
-   positionComponent,
-   finishedCallbackComponent
+   entity
 )
-   if soundEffectComponent == nil then
-      error("soundSystem.addSoundEntity: soundEffectComponent = nil")
-   end
+   assert(type(entity.soundEffectComponent) == "table", "soundEffectComponent must be a soundEffectComponent.")
+   assert(entity.soundEffectComponent.name == "SoundEffect", "soundEffectComponent must be a soundEffectComponent.")
    -- positionComponent can be equal to nil for non-positional audio.
    -- finishedCallbackComponent can be equal to nil.
 
-   local id = self.entityMap:createAndAddEntity({
-      soundEffectComponent = soundEffectComponent,
-      positionComponent = positionComponent,
-      finishedCallbackComponent = finishedCallbackComponent
-   })
-
-   return id
+   self.entityMap:add(entity)
 end
 
 --- Removes a soundEntity from the sound system.
 -- @param id string: This system's ID of the entity to remove.
-function soundSystem.removeSoundEntity(self, id)
+function soundSystem.removeEntity(self, id)
    self.entityMap:remove(id)
 end
 
 --- Performs updates needed for maintaining sound system.
 -- Updates position of all love2d Sources.
 function soundSystem.update(self)
-   for _, soundEntity in ipairs(self.entityMap:getList()) do
-      local position = soundEntity.positionComponent
+   for _, entity in ipairs(self.entityMap:getList()) do
+      local position = entity.positionComponent
       if position ~= nil then
-         soundEntity.soundEffectComponent.source:setPosition(position.x, position.y)
+         entity.soundEffectComponent.source:setPosition(position.x, position.y)
       end
 
-      if soundEntity.soundEffectComponent.source:isStopped() and
-         soundEntity.finishedCallbackComponent ~= nil then
-         soundEntity.finishedCallbackComponent.callback(soundEntity)
+      if entity.soundEffectComponent.source:isStopped() and
+         entity.finishedCallbackComponent ~= nil then
+         entity.finishedCallbackComponent.callback(entity)
       end
    end
 end

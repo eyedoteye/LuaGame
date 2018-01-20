@@ -1,8 +1,9 @@
-local componentFactory = require "componentFactory"
 local soundSystem = require "soundSystem"
 local sourcePoolFactory = require "sourcePoolFactory"
 local clearTable = require "clearTable"
 
+local entityFactory = require "entityFactory"
+local componentFactory = require "componentFactory"
 
 
 local soundController = {
@@ -27,7 +28,7 @@ local function repoolFinishedSound(soundEntity)
 
    clearTable(soundEntity.soundEffectComponent)
    clearTable(soundEntity.finishedCallbackComponent)
-   soundController.soundSystem:removeSoundEntity(soundEntity.id)
+   soundController.soundSystem:removeEntity(soundEntity.id)
 end
 
 --- Temporary way to add sound sources until asset manager is added.
@@ -60,11 +61,11 @@ function soundController.playSoundAttachedToPositionComponent(
       callback = repoolFinishedSound
    })
 
-   self.soundSystem:addSoundEntity(
-      soundEffectComponent,
-      positionComponent,
-      finishedCallbackComponent
-   )
+   self.soundSystem:addEntity(entityFactory:createEntity({
+      soundEffectComponent = soundEffectComponent,
+      positionComponent = positionComponent,
+      finishedCallbackComponent = finishedCallbackComponent
+   }))
 
    soundEffectComponent.source:setPosition(positionComponent.x, positionComponent.y)
    soundEffectComponent.source:play()
@@ -82,11 +83,10 @@ function soundController.playSound(self, soundName)
       callback = repoolFinishedSound
    })
 
-   self.soundSystem:addSoundEntity(
-      soundEffectComponent,
-      nil,
-      finishedCallbackComponent
-   )
+   self.soundSystem:addEntity(entityFactory:createEntity({
+      soundEffectComponent = soundEffectComponent,
+      finishedCallbackComponent = finishedCallbackComponent
+   }))
 
    -- Intentional mutation of non-standard global variable 'love'
    -- Implementation of love2d v0.10.2 api:

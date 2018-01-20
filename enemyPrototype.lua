@@ -3,35 +3,38 @@ local spriteSystem = require "spriteSystem"
 local collisionSystem = require "collisionSystem"
 local updateSystem = require "updateSystem"
 
+local entityFactory = require "entityFactory"
 local componentFactory = require "componentFactory"
 local rotationTools = require "rotationTools"
 
-local function deleteEnemy(self)
-   spriteSystem:removeSpriteEntity(self.spriteSystemEntityID)
-   collisionSystem:removeCollisionEntity(self.collisionSystemEntityID)
-   updateSystem:removeUpdateEntity(self.updateSystemEntityID)
+local function delete(self)
+   spriteSystem:removeEntity(self.id)
+   collisionSystem:removeEntity(self.id)
+   updateSystem:removeEntity(self.id)
 end
 
-local function resolveCollision(selfCollisionEntity, otherCollisionEntity, data)
-   if otherCollisionEntity.parent.entityTypeComponent.type == "Fireball" then
-      deleteEnemy(selfCollisionEntity.parent)
+local function resolveCollision(self, other, data)
+   if other.entityTypeComponent.type == "Fireball" then
+      delete(self)
    end
 end
 
-local function update(selfUpdateEntity)
-   local self = selfUpdateEntity.parent
+local function update(self)
    self.rotationComponent.rotation = rotationTools:getRotationFromPointToPoint(
       self.positionComponent.x, self.positionComponent.y,
       self.playerPositionComponent.x, self.playerPositionComponent.y
    )
 end
 
-local function createEnemy(
+local enemyPrototype = {}
+
+function enemyPrototype.create(
+   self,
    x, y,
    rotation,
    playerPositionComponent
 )
-   local enemy = {
+   local enemy = entityFactory:createEntity({
       entityTypeComponent = componentFactory:createComponent(
          "EntityType",
          {
@@ -63,31 +66,19 @@ local function createEnemy(
          {
             update = update
          }
+      ),
+      spriteComponent = spriteController:getSpriteComponentWithSprite(
+         "player",
+         "enemy"
       )
-   }
+   })
    enemy.playerPositionComponent = playerPositionComponent
 
-   enemy.idleSprite = spriteController:getSpriteComponentWithSprite(
-      "player",
-      "enemy"
-   )
+   spriteSystem:addEntity(enemy)
+   collisionSystem:addEntity(enemy)
+   updateSystem:addEntity(enemy)
 
-   enemy.spriteSystemEntityID = spriteSystem:addSpriteEntity(
-      enemy.idleSprite,
-      enemy.positionComponent,
-      nil,
-      enemy.rotationComponent
-   )
-   enemy.collisionSystemEntityID = collisionSystem:addCollisionEntity(
-      enemy.entityTypeComponent,
-      enemy.positionComponent,
-      enemy.colliderComponent,
-      enemy
-   )
-   enemy.updateSystemEntityID = updateSystem:addUpdateEntity(
-      enemy.updateComponent,
-      enemy
-   )
+   return enemy
 end
 
-return createEnemy
+return enemyPrototype 

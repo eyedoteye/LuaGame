@@ -2,14 +2,18 @@ local spriteSystem = require "spriteSystem"
 local updateSystem = require "updateSystem"
 local collisionSystem = require "collisionSystem"
 local spriteController = require "spriteController"
+local soundController = require "soundController"
 
 local componentFactory = require "componentFactory"
 local entityFactory = require "entityFactory"
 
 local function delete(self)
-   spriteSystem:removeEntity(self.id)
-   updateSystem:removeEntity(self.id)
-   collisionSystem:removeEntity(self.id)
+   if self.deleted ~= true then
+      spriteSystem:removeEntity(self.id)
+      updateSystem:removeEntity(self.id)
+      collisionSystem:removeEntity(self.id)
+   end
+   self.deleted = true
 end
 
 local function resolveCollision(self, other, data)
@@ -83,6 +87,11 @@ function playerFireballPrototype.create(
    spriteSystem:addEntity(fireball)
    updateSystem:addEntity(fireball)
    collisionSystem:addEntity(fireball)
+
+   soundController:playSoundAttachedToPositionComponent(
+      "Fireball",
+      fireball.positionComponent
+   )
 
    fireball.lifetime = 1
 

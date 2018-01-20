@@ -21,8 +21,10 @@ local entityFactory = require "entityFactory"
 
 local playerPrototype = require "playerPrototype"
 local mousePrototype = require "mousePrototype"
+local enemyPrototype = require "enemyPrototype"
 
---local createEnemy = require "enemy"
+
+local player
 
 function love.load()
    spriteController:addTexture("player.png", "player")
@@ -50,9 +52,16 @@ function love.load()
       0, 32,
       32, 32
    )
+
+   soundController:addSoundSource(
+      "Fireball+1.wav",
+      "Fireball"
+   )
+
    collisionSystem:makeEntityTypesCollidable("Enemy","Fireball")
+
    local screenWidth, screenHeight = love.graphics.getDimensions()
-   playerPrototype:create(screenWidth / 2, screenHeight / 2)
+   player = playerPrototype:create(screenWidth / 2, screenHeight / 2)
    mousePrototype:create()
 end
 
@@ -72,9 +81,9 @@ function love.draw()
 end
 
 local function update(dt)
---   if inputController:isPressedThisFrame(1, "rightclick") then
---      createEnemy(love.mouse.getX(), love.mouse.getY(), 0, player.positionComponent)
---   end
+   if inputController:isPressedThisFrame(1, "rightclick") then
+      enemyPrototype:create(love.mouse.getX(), love.mouse.getY(), 0, player.positionComponent)
+   end
    --
    updateSystem:update(dt)
    collisionSystem:update()

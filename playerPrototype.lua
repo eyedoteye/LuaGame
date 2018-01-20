@@ -46,7 +46,14 @@ local function update(self, dt)
    processMovementInput(self, dt)
    processMouseMovementInput(self)
    if inputController:isPressedThisFrame(1, "leftclick") then
-      shootFireball(self)
+      self.autoFireball = not self.autoFireball 
+   end
+   if self.autoFireball then
+      self.autoFireballCooldown = self.autoFireballCooldown - dt
+      if self.autoFireballCooldown <= 0 then
+         self.autoFireballCooldown = 0.05
+         shootFireball(self)
+      end
    end
 end
 
@@ -90,6 +97,8 @@ function playerPrototype.create(self, x, y)
 
    spriteSystem:addEntity(player)
    updateSystem:addEntity(player)
+
+   player.autoFireballCooldown = 0
 
    return player
 end
