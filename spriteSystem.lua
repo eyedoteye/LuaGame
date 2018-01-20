@@ -39,14 +39,12 @@ function spriteSystem.addSpriteEntity(
    self,
    spriteComponent,
    positionComponent,
-   positionOffsetComponent,
    rotationComponent,
    originOffsetComponent
 )
    local id = self.entityMap:createAndAddEntity({
       spriteComponent = spriteComponent,
       positionComponent = positionComponent,
-      positionOffsetComponent = positionOffsetComponent,
       rotationComponent = rotationComponent,
       originOffsetComponent = originOffsetComponent
    })
@@ -78,15 +76,9 @@ end
 local function render(
    spriteComponent,
    positionComponent,
-   positionOffsetComponent,
    rotationComponent,
    originOffsetComponent
 )
-   local xOffset, yOffset = 0, 0
-   if positionOffsetComponent ~= nil then
-      xOffset = positionOffsetComponent.x
-      yOffset = positionOffsetComponent.y
-   end
    local rotation = 0
    if rotationComponent ~= nil then
       rotation = rotationComponent.rotation
@@ -106,8 +98,8 @@ local function render(
    love.graphics.draw(
       spriteComponent.texture,
       spriteComponent.quad,
-      math.floor(positionComponent.x + xOffset),
-      math.floor(positionComponent.y + yOffset),
+      math.floor(positionComponent.x),
+      math.floor(positionComponent.y),
       rotation * math.pi / 180,
       1, 1,
       math.floor(originX + originXOffset),
@@ -121,7 +113,6 @@ function spriteSystem.draw(self)
       render(
          spriteEntity.spriteComponent,
          spriteEntity.positionComponent,
-         spriteEntity.positionOffsetComponent,
          spriteEntity.rotationComponent,
          spriteEntity.originOffsetComponent
       )

@@ -64,15 +64,6 @@ local componentFactory ={
          return component
       end,
 
-      ["PositionOffset"] = function(properties)
-         local component = {
-            name = "PositionOffset",
-            x = properties.x,
-            y = properties.y
-         }
-         return component
-      end,
-
       ["Rotation"] = function(properties)
          local component = {
             name = "Rotation",
