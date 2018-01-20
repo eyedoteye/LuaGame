@@ -20,7 +20,6 @@ local function fireball_delete(self)
    spriteSystem:removeSpriteEntity(self.spriteSystemEntityID)
    updateSystem:removeUpdateEntity(self.updateSystemEntityID)
    collisionSystem:removeCollisionEntity(self.collisionSystemEntityID)
-   self.deleted = true
 --   clearTable(self.updateComponent)
 --   clearTable(self.positionComponent)
 --   clearTable(self.rotationComponent)
@@ -30,9 +29,7 @@ end
 
 local function fireball_resolveCollision(selfCollisionEntity, otherCollisionEntity, data)
    if otherCollisionEntity.parent.entityTypeComponent.type == "Enemy" then
-      if not selfCollisionEntity.parent.deleted then
-         fireball_delete(selfCollisionEntity.parent)
-      end
+      fireball_delete(selfCollisionEntity.parent)
    end
 end
 
@@ -145,20 +142,11 @@ local function shootFireball(self)
 end
 
 local function update(updateEntity, dt)
-   local self = updateEntity.parent
-   processMovementInput(self, dt)
-   processMouseMovementInput(self)
-   self.fireballTimer = self.fireballTimer - dt
-   if self.fireballTimer < 0 then
-      self.fireballTimer = 0
+   processMovementInput(updateEntity.parent, dt)
+   processMouseMovementInput(updateEntity.parent)
+   if inputController:isPressedThisFrame(1, "leftclick") then
+      shootFireball(updateEntity.parent)
    end
-   if inputController:isDown(1, "leftclick") then
-      if self.fireballTimer == 0 then
-         self.fireballTimer = .5
-         shootFireball(self)
-      end
-   end
-
 end
 
 local screenWidth, screenHeight = love.graphics.getDimensions()
@@ -208,7 +196,6 @@ function player.init(self)
       self.updateComponent,
       self
    )
-   self.fireballTimer = 0
 end
 
 return player
