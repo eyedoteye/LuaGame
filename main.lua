@@ -19,7 +19,7 @@ local entityFactory = require "entityFactory"
 
 
 
---local player = require "player"
+local playerPrototype = require "playerPrototype"
 local mousePrototype = require "mousePrototype"
 
 --local createEnemy = require "enemy"
@@ -51,7 +51,8 @@ function love.load()
       32, 32
    )
    collisionSystem:makeEntityTypesCollidable("Enemy","Fireball")
---   player:init()
+   local screenWidth, screenHeight = love.graphics.getDimensions()
+   playerPrototype:create(screenWidth / 2, screenHeight / 2)
    mousePrototype:create()
 end
 
@@ -71,9 +72,9 @@ function love.draw()
 end
 
 local function update(dt)
-   if inputController:isPressedThisFrame(1, "rightclick") then
-      createEnemy(love.mouse.getX(), love.mouse.getY(), 0, player.positionComponent)
-   end
+--   if inputController:isPressedThisFrame(1, "rightclick") then
+--      createEnemy(love.mouse.getX(), love.mouse.getY(), 0, player.positionComponent)
+--   end
    --
    updateSystem:update(dt)
    collisionSystem:update()
