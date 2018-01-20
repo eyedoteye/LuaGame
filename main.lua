@@ -19,10 +19,10 @@ local entityFactory = require "entityFactory"
 
 
 
-local player = require "player"
+--local player = require "player"
 local mouse = require "mouse"
 
-local createEnemy = require "enemy"
+--local createEnemy = require "enemy"
 
 function love.load()
    spriteController:addTexture("player.png", "player")
@@ -51,7 +51,7 @@ function love.load()
       32, 32
    )
    collisionSystem:makeEntityTypesCollidable("Enemy","Fireball")
-   player:init()
+--   player:init()
    mouse:init()
 end
 
@@ -64,13 +64,6 @@ function love.draw()
 		love.graphics.setColor(255, 255, 255)
    end
    --
-   love.graphics.setColor(255, 255, 255)
-   love.graphics.circle(
-      "fill",
-      player.positionComponent.x,
-      player.positionComponent.y,
-      16
-   )
 
    --
    love.graphics.setColor(255, 255, 255, 255)

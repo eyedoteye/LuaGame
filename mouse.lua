@@ -2,26 +2,24 @@ local spriteSystem = require "spriteSystem"
 local updateSystem = require "updateSystem"
 local spriteController = require "spriteController"
 
+local entityFactory = require "entityFactory"
 local componentFactory = require "componentFactory"
 
 
 
-local function updateCrosshair(self)
+local function update(self, dt)
    local x, y = love.mouse.getPosition()
    self.positionComponent.x = x
    self.positionComponent.y = y
 end
 
-local function update(updateEntity, dt)
-   updateCrosshair(updateEntity.parent)
-end
-
-local mouse = {
+local mouse = entityFactory:createEntity({
    positionComponent = componentFactory:createComponent("Position", {}),
    updateComponent = componentFactory:createComponent("Update", {update = update})
-}
+})
 
-function mouse.load(self)
+function mouse.init(self)
+   print("hello")
    self.crosshairSprite = {}
    self.crosshairSprite.spriteComponent = spriteController:getSpriteComponentWithSprite(
       "player",
@@ -34,16 +32,7 @@ function mouse.load(self)
    )
    love.mouse.setVisible(false)
 
-   self.updateSystemEntityID = updateSystem:addUpdateEntity(
-      self.updateComponent,
-      self
-   )
-end
-
-function mouse.init(self, dt)
-   local x, y = love.mouse.getPosition()
-   self.positionComponent.x = x
-   self.positionComponent.y = y
+   updateSystem:addEntity(self)
 end
 
 return mouse

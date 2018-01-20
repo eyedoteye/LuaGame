@@ -29,7 +29,7 @@ local function entityMap_getSize(self)
    return #self.entities
 end
 
---- Add an entity to the map.
+--- Create and add an entity to the map.
 -- @param components table: Table containing mapped components of entity.
 local function entityMap_createAndAddEntity(self, components)
    local entity = entityFactory:createEntity(components)
@@ -39,6 +39,14 @@ local function entityMap_createAndAddEntity(self, components)
    self.idToIndex[entity.id] = index
 
    return entity.id
+end
+
+--- Add an entity to the map.
+--@param entity entity: Entity to add.
+local function entityMap_add(self, entity)
+   local index = #self.entities + 1
+   self.entities[index] = entity
+   self.idToIndex[entity.id] = index
 end
 
 --- Removes an entity from the map.
@@ -63,7 +71,6 @@ local function entityMap_remove(self, id)
    end
 
    self.idToIndex[id] = nil
-   entityFactory:relieveID(id)
 end
 
 --- Creates a new entityMap.
@@ -78,6 +85,7 @@ function entityMapFactory.create(self)
       getList = entityMap_getList,
       getSize = entityMap_getSize,
       createAndAddEntity = entityMap_createAndAddEntity,
+      add = entityMap_add,
       remove = entityMap_remove
    }
    return list

@@ -12,27 +12,21 @@ local updateSystem = {
    entityMap = entityMapFactory:create() -- entityMap: Stores all update entities.
 }
 
-function updateSystem.addUpdateEntity(
+function updateSystem.addEntity(
    self,
-   updateComponent,
-   parent
+   entity
 )
-   local id = self.entityMap:createAndAddEntity({
-      updateComponent = updateComponent,
-      parent = parent
-   })
-
-   return id
+   self.entityMap:add(entity)
+   print("hi")
 end
 
-function updateSystem.removeUpdateEntity(self, id)
+function updateSystem.removeEntity(self, id)
    self.entityMap:remove(id)
 end
 
 function updateSystem.update(self, dt)
-
-   for __, updateEntity in ipairs(self.entityMap:getList()) do
-      updateEntity.updateComponent.update(updateEntity, dt)
+   for __, entity in ipairs(self.entityMap:getList()) do
+      entity.updateComponent.update(entity, dt)
    end
 end
 
