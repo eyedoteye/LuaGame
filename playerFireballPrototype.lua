@@ -8,7 +8,7 @@ local componentFactory = require "componentFactory"
 local entityFactory = require "entityFactory"
 
 local function delete(self)
-   if self.deleted ~= true then
+   if not self.deleted then
       spriteSystem:removeEntity(self.id)
       updateSystem:removeEntity(self.id)
       collisionSystem:removeEntity(self.id)

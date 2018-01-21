@@ -8,9 +8,12 @@ local componentFactory = require "componentFactory"
 local rotationTools = require "rotationTools"
 
 local function delete(self)
-   spriteSystem:removeEntity(self.id)
-   collisionSystem:removeEntity(self.id)
-   updateSystem:removeEntity(self.id)
+   if not self.deleted then
+      spriteSystem:removeEntity(self.id)
+      collisionSystem:removeEntity(self.id)
+      updateSystem:removeEntity(self.id)
+      self.deleted = true
+   end
 end
 
 local function resolveCollision(self, other, data)
