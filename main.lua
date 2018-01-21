@@ -27,6 +27,8 @@ local enemyPrototype = require "enemyPrototype"
 local player
 
 function love.load()
+   love.graphics.setBackgroundColor(130, 45, 165)
+
    spriteController:addTexture("player.png", "player")
    spriteController:addQuadToTexture(
       "player",
