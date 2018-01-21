@@ -23,6 +23,7 @@ local playerPrototype = require "playerPrototype"
 local mousePrototype = require "mousePrototype"
 local enemyPrototype = require "enemyPrototype"
 
+local playerHealthBarPrototype = require "playerHealthBarPrototype"
 
 local player
 
@@ -54,6 +55,18 @@ function love.load()
       0, 32,
       32, 32
    )
+   spriteController:addQuadToTexture(
+      "player",
+      "healthBar",
+      96, 0,
+      94, 18
+   )
+   spriteController:addQuadToTexture(
+      "player",
+      "healthBarBlip",
+      96, 18,
+      10, 14
+   )
 
    soundController:addSoundSource(
       "Fireball+1.wav",
@@ -65,6 +78,8 @@ function love.load()
    local screenWidth, screenHeight = love.graphics.getDimensions()
    player = playerPrototype:create(screenWidth / 2, screenHeight / 2)
    mousePrototype:create()
+
+   playerHealthBarPrototype:create()
 end
 
 function love.draw()
