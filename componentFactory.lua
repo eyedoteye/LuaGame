@@ -82,6 +82,12 @@ local componentFactory ={
    }
 }
 
+function componentFactory.registerComponent(self, componentName, constructorFunction)
+   assert(self.componentCreators[componentName] == nil, "componentName already exists.")
+
+   self.componentCreators[componentName] = constructorFunction
+end
+
 function componentFactory.createComponent(self, componentName, componentProperties)
    local componentCreator = self.componentCreators[componentName]
    if componentCreator == nil then

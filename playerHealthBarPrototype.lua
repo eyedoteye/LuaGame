@@ -1,5 +1,6 @@
 local spriteController = require "spriteController"
 local spriteSystem = require "spriteSystem"
+local updateSystem = require "updateSystem"
 
 local entityFactory = require "entityFactory"
 local componentFactory = require "componentFactory"
@@ -99,7 +100,15 @@ local function removeBlips(self,count)
    end
 end
 
-function playerHealthBarPrototype.create(self)
+local function update(self, dt)
+   if self.playerHealthComponent.health > #self.blips then
+      addBlips(self, self.playerHealthComponent.health - #self.blips)
+   elseif self.playerHealthComponent.health < #self.blips then
+      removeBlips(self, #self.blips - self.playerHealthComponent.health)
+   end
+end
+
+function playerHealthBarPrototype.create(self, playerHealthComponent)
    local spriteComponent = spriteController:getSpriteComponentWithSprite(
       "player",
       "healthBar"
@@ -118,14 +127,20 @@ function playerHealthBarPrototype.create(self)
             y = spriteOrigin.y + 0
          }
       ),
-      spriteComponent = spriteComponent
+      spriteComponent = spriteComponent,
+      updateComponent = componentFactory:createComponent(
+         "Update",
+         {
+            update = update
+         }
+      ) 
    })
-
    spriteSystem:addEntity(healthBar)
+   updateSystem:addEntity(healthBar)
+
+   healthBar.playerHealthComponent = playerHealthComponent
 
    healthBar.blips = {}
-   addBlips(healthBar, 17)
-   removeBlips(healthBar, 7)
 
    return healthBar
 end

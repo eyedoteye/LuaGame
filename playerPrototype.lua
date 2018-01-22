@@ -46,7 +46,7 @@ local function update(self, dt)
    processMovementInput(self, dt)
    processMouseMovementInput(self)
    if inputController:isPressedThisFrame(1, "leftclick") then
-      self.autoFireball = not self.autoFireball 
+      self.autoFireball = not self.autoFireball
    end
    if self.autoFireball then
       self.autoFireballCooldown = self.autoFireballCooldown - dt
@@ -56,6 +56,17 @@ local function update(self, dt)
       end
    end
 end
+
+componentFactory:registerComponent(
+   "Health",
+   function(properties)
+      local component = {
+         name = "Health",
+         health = properties.health
+      }
+      return component
+   end
+)
 
 local playerPrototype = {}
 
@@ -74,13 +85,19 @@ function playerPrototype.create(self, x, y)
       colliderComponent = componentFactory:createComponent(
          "Collider.Circle",
          {
-            radius = 14
+            radius = 16
          }
       ),
       rotationComponent = componentFactory:createComponent(
          "Rotation",
          {
             rotation = 180
+         }
+      ),
+      healthComponent = componentFactory:createComponent(
+         "Health",
+         {
+            health = 16
          }
       ),
       updateComponent = componentFactory:createComponent(

@@ -79,7 +79,7 @@ function love.load()
    player = playerPrototype:create(screenWidth / 2, screenHeight / 2)
    mousePrototype:create()
 
-   playerHealthBarPrototype:create()
+   playerHealthBarPrototype:create(player.healthComponent)
 end
 
 function love.draw()
