@@ -45,13 +45,15 @@ end
 local function update(self, dt)
    processMovementInput(self, dt)
    processMouseMovementInput(self)
-   if inputController:isPressedThisFrame(1, "leftclick") then
-      self.autoFireball = not self.autoFireball
+
+   self.fireballCooldownTimer = self.fireballCooldownTimer - dt
+   if self.fireballCooldownTimer < 0 then
+      self.fireballCooldownTimer = 0
    end
-   if self.autoFireball then
-      self.autoFireballCooldown = self.autoFireballCooldown - dt
-      if self.autoFireballCooldown <= 0 then
-         self.autoFireballCooldown = 0.1
+
+   if inputController:isDown(1, "leftclick") then
+      if self.fireballCooldownTimer == 0 then
+         self.fireballCooldownTimer = self.fireballCooldown
          shootFireball(self)
       end
    end
@@ -115,7 +117,8 @@ function playerPrototype.create(self, x, y)
    spriteSystem:addEntity(player)
    updateSystem:addEntity(player)
 
-   player.autoFireballCooldown = 0
+   player.fireballCooldownTimer = 0
+   player.fireballCooldown = 0.5
 
    return player
 end
