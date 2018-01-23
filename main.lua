@@ -39,6 +39,12 @@ function love.load()
    )
    spriteController:addQuadToTexture(
       "player",
+      "invincible",
+      32, 32,
+      32, 32
+   )
+   spriteController:addQuadToTexture(
+      "player",
       "crosshair",
       32, 0,
       32, 32
@@ -74,6 +80,7 @@ function love.load()
    )
 
    collisionSystem:makeEntityTypesCollidable("Enemy","Fireball")
+   collisionSystem:makeEntityTypesCollidable("Player", "Enemy")
 
    local screenWidth, screenHeight = love.graphics.getDimensions()
    player = playerPrototype:create(screenWidth / 2, screenHeight / 2)

@@ -2,6 +2,7 @@ local inputController = require "inputController"
 local spriteController = require "spriteController"
 local spriteSystem = require "spriteSystem"
 local updateSystem = require "updateSystem"
+local collisionSystem = require "collisionSystem"
 
 local componentFactory = require "componentFactory"
 local entityFactory = require "entityFactory"
@@ -42,6 +43,26 @@ local function shootFireball(self)
    )
 end
 
+local function setInvincible(self, on, time)
+   if on then
+      self.invincible = true
+      self.invincibleTimer = time
+      spriteController:updateSpriteComponentWithSprite(
+         self.spriteComponent,
+         "player",
+         "invincible"
+      )
+   elseif self.invincible then
+      self.invincible = false
+      self.invincibleTimer = 0
+      spriteController:updateSpriteComponentWithSprite(
+         self.spriteComponent,
+         "player",
+         "idle"
+      )
+   end
+end
+
 local function update(self, dt)
    processMovementInput(self, dt)
    processMouseMovementInput(self)
@@ -57,7 +78,26 @@ local function update(self, dt)
          shootFireball(self)
       end
    end
+
+   self.invincibleTimer = self.invincibleTimer - dt
+   if self.invincibleTimer < 0 then
+      setInvincible(self, false)
+   end
 end
+
+
+local function resolveCollision(self, other, data)
+   if other.entityTypeComponent.type == "Enemy" then
+      if not self.invincible then
+         self.healthComponent.health = self.healthComponent.health - 1
+         setInvincible(self, true, 3)
+      end
+   end
+end
+
+local playerPrototype = {}
+
+local maxHealth = 17
 
 componentFactory:registerComponent(
    "Health",
@@ -70,11 +110,25 @@ componentFactory:registerComponent(
    end
 )
 
-local playerPrototype = {}
+local function damage(self, value)
+   assert(type(value) == "number", "value must be a number.")
+   self.healthComponent.health = self.healthComponent.health - value
+   if self.healthComponent.health < 0 then
+      self.healthComponent.health = 0
+   end
+end
+
+local function heal(self, value)
+   assert(type(value) == "number", "value must be a number.")
+   self.healthComponent.health = self.healthComponent.health + value
+   if self.healthComponent.health > maxHealth then
+      self.healthComponent.health = maxHealth
+   end
+end
 
 function playerPrototype.create(self, x, y)
-   assert(type(x) == "number", "x must be a number")
-   assert(type(y) == "number", "y must be a number")
+   assert(type(x) == "number", "x must be a number.")
+   assert(type(y) == "number", "y must be a number.")
 
    local player = entityFactory:createEntity({
       positionComponent = componentFactory:createComponent(
@@ -84,22 +138,29 @@ function playerPrototype.create(self, x, y)
             y = y
          }
       ),
+      entityTypeComponent = componentFactory:createComponent(
+         "EntityType",
+         {
+            type = "Player"
+         }
+      ),
       colliderComponent = componentFactory:createComponent(
          "Collider.Circle",
          {
-            radius = 16
+            radius = 16,
+            resolveCollision = resolveCollision
          }
       ),
       rotationComponent = componentFactory:createComponent(
          "Rotation",
          {
-            rotation = 180
+            rotation = 0
          }
       ),
       healthComponent = componentFactory:createComponent(
          "Health",
          {
-            health = 16
+            health = maxHealth
          }
       ),
       updateComponent = componentFactory:createComponent(
@@ -111,14 +172,20 @@ function playerPrototype.create(self, x, y)
       spriteComponent = spriteController:getSpriteComponentWithSprite(
          "player",
          "idle"
-      )
+      ),
+
+      damage = damage,
+      heal = heal
    })
 
    spriteSystem:addEntity(player)
    updateSystem:addEntity(player)
+   collisionSystem:addEntity(player)
 
    player.fireballCooldownTimer = 0
    player.fireballCooldown = 0.5
+
+   player.invincibleTimer = 0
 
    return player
 end
