@@ -95,7 +95,7 @@ local function removeBlips(self,count)
       count = #self.blips
    end
 
-   for i = 1, count do
+   for _ = 1, count do
       removeBlip(self)
    end
 end

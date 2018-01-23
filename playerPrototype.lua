@@ -85,7 +85,6 @@ local function update(self, dt)
    end
 end
 
-
 local function resolveCollision(self, other, data)
    if other.entityTypeComponent.type == "Enemy" then
       if not self.invincible then
