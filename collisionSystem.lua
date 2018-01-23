@@ -118,16 +118,40 @@ end
 --- Turns on one-way movability between two entity types.
 -- @param firstEntityType entityTypeComponent: Type name of entity that will be made the movable.
 -- @param secondEntityType entityTypeComponent: Type name of entity that will be made the mover.
-function collisionSystem.makeEntityMovableByEntity(self, firstEntityType, secondEntityType)
-   self.movableMap[firstEntityType.type] = self.movableMap[firstEntityType.type] or {}
-   self.movableMap[firstEntityType.type][secondEntityType.type] = true
+function collisionSystem.makeEntityTypeMovableByEntityType(self, firstEntityType, secondEntityType)
+   if type(firstEntityType) == "table" then
+      assert(firstEntityType.name == "EntityType", "firstEntityType is neither an entityTypeComponent nor a string")
+      firstEntityType = firstEntityType.type
+   else
+      assert(type(firstEntityType) == "string", "firstEntityType is neither an entityTypeComponent nor a string")
+   end
+   if type(secondEntityType) == "table" then
+      assert(secondEntityType.name == "EntityType", "secondEntityType is neither an entityTypeComponent nor a string")
+      secondEntityType = secondEntityType.type
+   else
+      assert(type(secondEntityType) == "string", "secondEntityType is neither an entityTypeComponent nor a string")
+   end
+   self.movableMap[firstEntityType] = self.movableMap[firstEntityType] or {}
+   self.movableMap[firstEntityType][secondEntityType] = true
 end
 
 --- Turns off one-way movability between two entity types.
 -- @param firstEntityType entityTypeComponent: Entity type that will no longer be the movable.
 -- @param secondEntityType entityTypeComponent: Entity type that will no longer be the mover.
-function collisionSystem.unmakeEntityMovableByEntity(self, firstEntityType, secondEntityType)
-   self.movableMap[firstEntityType.type][secondEntityType.type] = nil
+function collisionSystem.unmakeEntityTypeMovableByEntityType(self, firstEntityType, secondEntityType)
+   if type(firstEntityType) == "table" then
+      assert(firstEntityType.name == "EntityType", "firstEntityType is neither an entityTypeComponent nor a string")
+      firstEntityType = firstEntityType.type
+   else
+      assert(type(firstEntityType) == "string", "firstEntityType is neither an entityTypeComponent nor a string")
+   end
+   if type(secondEntityType) == "table" then
+      assert(secondEntityType.name == "EntityType", "secondEntityType is neither an entityTypeComponent nor a string")
+      secondEntityType = secondEntityType.type
+   else
+      assert(type(secondEntityType) == "string", "secondEntityType is neither an entityTypeComponent nor a string")
+   end
+   self.movableMap[firstEntityType][secondEntityType] = nil
 end
 
 --- Returns if first entity type is movable by second entity type.

@@ -79,8 +79,12 @@ function love.load()
       "Fireball"
    )
 
+   collisionSystem:makeEntityTypesCollidable("Enemy","Enemy")
+   collisionSystem:makeEntityTypeMovableByEntityType("Enemy", "Enemy")
+
    collisionSystem:makeEntityTypesCollidable("Enemy","Fireball")
    collisionSystem:makeEntityTypesCollidable("Player", "Enemy")
+   collisionSystem:makeEntityTypeMovableByEntityType("Enemy", "Player")
 
    local screenWidth, screenHeight = love.graphics.getDimensions()
    player = playerPrototype:create(screenWidth / 2, screenHeight / 2)

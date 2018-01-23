@@ -22,7 +22,15 @@ local function resolveCollision(self, other, data)
    end
 end
 
-local function update(self)
+local function update(self, dt)
+   local radDir = (self.rotationComponent.rotation- 90) * math.pi / 180
+   local xDir = math.cos(radDir)
+   local yDir = math.sin(radDir)
+
+   local speed = 100
+   self.positionComponent.x = self.positionComponent.x + xDir * speed * dt
+   self.positionComponent.y = self.positionComponent.y + yDir * speed * dt
+
    self.rotationComponent.rotation = rotationTools:getRotationFromPointToPoint(
       self.positionComponent.x, self.positionComponent.y,
       self.playerPositionComponent.x, self.playerPositionComponent.y
