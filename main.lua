@@ -21,7 +21,7 @@ local entityFactory = require "entityFactory"
 
 local playerPrototype = require "playerPrototype"
 local mousePrototype = require "mousePrototype"
-local enemyPrototype = require "enemyPrototype"
+local enemySquadPrototype = require "enemySquadPrototype"
 
 local playerHealthBarPrototype = require "playerHealthBarPrototype"
 
@@ -40,7 +40,7 @@ function love.load()
    spriteController:addQuadToTexture(
       "player",
       "invincible",
-      32, 32,
+      0, 32,
       32, 32
    )
    spriteController:addQuadToTexture(
@@ -58,7 +58,13 @@ function love.load()
    spriteController:addQuadToTexture(
       "player",
       "enemy",
-      0, 32,
+      32, 32,
+      32, 32
+   )
+   spriteController:addQuadToTexture(
+      "player",
+      "enemySpawner",
+      64, 32,
       32, 32
    )
    spriteController:addQuadToTexture(
@@ -110,7 +116,8 @@ end
 
 local function update(dt)
    if inputController:isPressedThisFrame(1, "rightclick") then
-      enemyPrototype:create(love.mouse.getX(), love.mouse.getY(), player.positionComponent)
+      --enemyPrototype:create(love.mouse.getX(), love.mouse.getY(), player.positionComponent)
+      enemySquadPrototype:create(love.mouse.getX(), love.mouse.getY(), 5)
    end
    --
    updateSystem:update(dt)
