@@ -93,12 +93,14 @@ end
 --- Renders all spriteEntitys.
 function spriteSystem.draw(self)
    for _, entity in ipairs(self.entityMap:getList()) do
-      render(
-         entity.spriteComponent,
-         entity.positionComponent,
-         entity.rotationComponent,
-         entity.originOffsetComponent
-      )
+      if not entity.spriteComponent.hidden then
+         render(
+            entity.spriteComponent,
+            entity.positionComponent,
+            entity.rotationComponent,
+            entity.originOffsetComponent
+         )
+      end
    end
 end
 

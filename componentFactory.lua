@@ -59,7 +59,8 @@ local componentFactory ={
             textureName = properties.textureName,
             quadName = properties.quadName,
             texture = properties.texture,
-            quad = properties.quad
+            quad = properties.quad,
+            hidden = properties.hidden
          }
          return component
       end,

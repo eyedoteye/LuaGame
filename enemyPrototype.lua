@@ -90,4 +90,4 @@ function enemyPrototype.create(
    return enemy
 end
 
-return enemyPrototype 
+return enemyPrototype

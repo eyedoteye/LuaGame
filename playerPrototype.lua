@@ -60,6 +60,16 @@ local function setInvincible(self, on, time)
          "player",
          "idle"
       )
+      self.spriteComponent.hidden = false
+   end
+end
+
+local blinkCooldown = 0.1
+local function blink(self, dt)
+   self.blinkTimer = self.blinkTimer - dt
+   if self.blinkTimer <= 0 then
+      self.blinkTimer = blinkCooldown
+      self.spriteComponent.hidden = not self.spriteComponent.hidden
    end
 end
 
@@ -77,6 +87,10 @@ local function update(self, dt)
          self.fireballCooldownTimer = self.fireballCooldown
          shootFireball(self)
       end
+   end
+
+   if self.invincible then
+      blink(self, dt)
    end
 
    self.invincibleTimer = self.invincibleTimer - dt
@@ -185,6 +199,7 @@ function playerPrototype.create(self, x, y)
    player.fireballCooldown = 0.5
 
    player.invincibleTimer = 0
+   player.blinkTimer = 0
 
    entityFactory:registerNamedEntity(player, "Player")
 
