@@ -186,6 +186,8 @@ function playerPrototype.create(self, x, y)
 
    player.invincibleTimer = 0
 
+   entityFactory:registerNamedEntity(player, "Player")
+
    return player
 end
 

@@ -94,23 +94,23 @@ function love.load()
 end
 
 function love.draw()
-	if debugMode then
+
+   --
+   love.graphics.setColor(255, 255, 255, 255)
+   spriteSystem:draw()
+
+   if debugMode then
 		love.graphics.setColor(255, 0, 0, 255 * 0.8)
 		love.graphics.print('Memory(kB): ' .. collectgarbage('count'), 5,5)
 		love.graphics.print('FPS: ' .. love.timer.getFPS(), 5,25)
 		love.graphics.print('Mouse: (' .. love.mouse.getX() .. ',' .. love.mouse.getY() .. ')', 85,25)
 		love.graphics.setColor(255, 255, 255)
    end
-   --
-
-   --
-   love.graphics.setColor(255, 255, 255, 255)
-   spriteSystem:draw()
 end
 
 local function update(dt)
    if inputController:isPressedThisFrame(1, "rightclick") then
-      enemyPrototype:create(love.mouse.getX(), love.mouse.getY(), 0, player.positionComponent)
+      enemyPrototype:create(love.mouse.getX(), love.mouse.getY(), player.positionComponent)
    end
    --
    updateSystem:update(dt)

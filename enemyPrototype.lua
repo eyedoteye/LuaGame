@@ -41,9 +41,7 @@ local enemyPrototype = {}
 
 function enemyPrototype.create(
    self,
-   x, y,
-   rotation,
-   playerPositionComponent
+   x, y
 )
    local enemy = entityFactory:createEntity({
       entityTypeComponent = componentFactory:createComponent(
@@ -62,7 +60,7 @@ function enemyPrototype.create(
       rotationComponent = componentFactory:createComponent(
          "Rotation",
          {
-            rotation = rotation
+            rotation = 0
          }
       ),
       colliderComponent = componentFactory:createComponent(
@@ -83,7 +81,7 @@ function enemyPrototype.create(
          "enemy"
       )
    })
-   enemy.playerPositionComponent = playerPositionComponent
+   enemy.playerPositionComponent = entityFactory:getNamedEntity("Player").positionComponent
 
    spriteSystem:addEntity(enemy)
    collisionSystem:addEntity(enemy)

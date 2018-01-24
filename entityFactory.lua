@@ -1,5 +1,6 @@
 local entityFactory = {
-   usedIDs = {}
+   usedIDs = {},
+   namedEntities = {}
 }
 
 local function resolveCollision(usedIDs, id)
@@ -27,6 +28,20 @@ function entityFactory.createEntity(self, entityComponents)
 
    entity.id = id
    return entity
+end
+
+function entityFactory.registerNamedEntity(self, entity, name)
+   assert(self.namedEntities[name] == nil, "name already exists.")
+   self.namedEntities[name] = entity
+end
+
+function entityFactory.unregisterNamedEntity(self, entity, name)
+   assert(self.namedEntities[name] ~= nil, "name does not exist.")
+   self.namedEntities[name] = nil
+end
+
+function entityFactory.getNamedEntity(self, name)
+   return self.namedEntities[name]
 end
 
 function entityFactory.relieveID(self, id)
