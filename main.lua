@@ -105,12 +105,12 @@ function love.load()
 
 
    local path = pathPrototype:create()
-   path:addLine(0, 100)
-   path:addLine(90, 100)
+   path:addRelativeLine(0, 100)
+   path:addRelativeLine(90, 100)
    path:addLine(180, 100)
-   path:addLine(270, 100)
+   path:addRelativeLine(270, 100)
    pather = patherPrototype:create(
-      player.positionComponent,
+      player,
       path
    )
 end
@@ -132,7 +132,7 @@ end
 
 local function update(dt)
    if inputController:isDown(1, "rightclick") then
-      pather:stepThroughPath(50 * dt)
+      pather:travelPath(50 * dt)
    end
 --   if inputController:isPressedThisFrame(1, "rightclick") then
 --      pather:stepThroughPath(300)

@@ -3,7 +3,27 @@ local pointTools = require "pointTools"
 
 local patherPrototype = {}
 
-local function pather_stepThroughPath(self, distanceToTravel)
+local function getSubpathDirectionVector(self, subpath)
+   local xDir, yDir
+   if subpath.type == "Absolute" then
+      xDir = subpath.xDir
+      yDir = subpath.yDir
+   elseif subpath.type == "Relative" then
+      local rotation = self.rotationComponent.rotation + subpath.rotation
+      xDir, yDir = rotationTools:getVectorFromRotation(rotation)
+   end
+
+   return xDir, yDir
+end
+
+local function travelSubpath(self, subpath, distance)
+   local xDir, yDir = getSubpathDirectionVector(self, subpath)
+
+   self.positionComponent.x = self.positionComponent.x + distance * xDir
+   self.positionComponent.y = self.positionComponent.y + distance * yDir
+end
+
+local function pather_travelPath(self, distanceToTravel)
    local subpath = self.path.subpaths[self.currentSubpath]
 
    if subpath == nil then -- No more subpaths to follow.
@@ -13,10 +33,7 @@ local function pather_stepThroughPath(self, distanceToTravel)
    local remainingDistanceOnSubpath = subpath.magnitude - self.distanceTraveledOnSubpath
 
    while subpath ~= nil and remainingDistanceOnSubpath < distanceToTravel do
-      self.positionComponent.x = self.positionComponent.x +
-         remainingDistanceOnSubpath * subpath.xDir
-      self.positionComponent.y = self.positionComponent.y +
-         remainingDistanceOnSubpath * subpath.yDir
+      travelSubpath(self, subpath, remainingDistanceOnSubpath)
 
       distanceToTravel = distanceToTravel - remainingDistanceOnSubpath
       self.distanceTraveledOnSubpath = self.distanceTraveledOnSubpath +
@@ -34,10 +51,7 @@ local function pather_stepThroughPath(self, distanceToTravel)
    if subpath == nil then -- Reached end of paths
       self.reachedEndOfPath = true
    else
-      self.positionComponent.x = self.positionComponent.x +
-         distanceToTravel * subpath.xDir
-      self.positionComponent.y = self.positionComponent.y +
-         distanceToTravel * subpath.yDir
+      travelSubpath(self, subpath, distanceToTravel)
 
       self.distanceTraveledOnSubpath = self.distanceTraveledOnSubpath +
          distanceToTravel
@@ -56,18 +70,23 @@ local function pather_debugDraw(self)
    if subpath ~= nil then
       local distanceRemainingOnSubpath = subpath.magnitude -
          self.distanceTraveledOnSubpath
+
+      local xDir, yDir = getSubpathDirectionVector(self, subpath)
+
       local x = self.positionComponent.x +
-         distanceRemainingOnSubpath * subpath.xDir
+         distanceRemainingOnSubpath * xDir
       local y = self.positionComponent.y +
-         distanceRemainingOnSubpath * subpath.yDir
+         distanceRemainingOnSubpath * yDir
 
       for i = self.currentSubpath + 1, #self.path.subpaths do
          subpath = self.path.subpaths[i]
 
          local lastX = x
          local lastY = y
-         x = x + subpath.magnitude * subpath.xDir
-         y = y + subpath.magnitude * subpath.yDir
+
+         xDir, yDir = getSubpathDirectionVector(self, subpath)
+         x = x + subpath.magnitude * xDir
+         y = y + subpath.magnitude * yDir
 
          love.graphics.setColor(255, 255, 255)
          love.graphics.line(
@@ -78,10 +97,11 @@ local function pather_debugDraw(self)
 
       subpath = self.path.subpaths[self.currentSubpath]
 
+      xDir, yDir = getSubpathDirectionVector(self, subpath)
       x = self.positionComponent.x +
-         distanceRemainingOnSubpath * subpath.xDir
+         distanceRemainingOnSubpath * xDir
       y = self.positionComponent.y +
-         distanceRemainingOnSubpath * subpath.yDir
+         distanceRemainingOnSubpath * yDir
 
       love.graphics.setColor(0, 255, 0)
       love.graphics.line(
@@ -91,14 +111,15 @@ local function pather_debugDraw(self)
    end
 end
 
-function patherPrototype.create(self, positionComponent, path)
+function patherPrototype.create(self, entity, path)
    local pather = {
-      positionComponent = positionComponent,
+      positionComponent = entity.positionComponent,
+      rotationComponent = entity.rotationComponent,
       path = path,
       currentSubpath = 1,
       distanceTraveledOnSubpath = 0,
 
-      stepThroughPath = pather_stepThroughPath,
+      travelPath = pather_travelPath,
       reset = pather_reset,
       debugDraw = pather_debugDraw
    }
