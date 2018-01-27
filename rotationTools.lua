@@ -10,8 +10,8 @@ function rotationTools:getRotationFromPointToPoint(
 end
 
 function rotationTools:getVectorFromRotation(rotation)
-   -- Adding 90 degrees to compensate.
-   local radRotation = (rotation + 90) * math.pi / 180
+   -- Subtracting 90 degrees to compensate.
+   local radRotation = (rotation - 90) * math.pi / 180
    local xDir = math.cos(radRotation)
    local yDir = math.sin(radRotation)
    return xDir, yDir

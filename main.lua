@@ -23,9 +23,14 @@ local playerPrototype = require "playerPrototype"
 local mousePrototype = require "mousePrototype"
 local enemySquadPrototype = require "enemySquadPrototype"
 
+local pathPrototype = require "pathPrototype"
+local patherPrototype = require "patherPrototype"
+
 local playerHealthBarPrototype = require "playerHealthBarPrototype"
 
+
 local player
+local pather
 
 function love.load()
    love.graphics.setBackgroundColor(130, 45, 165)
@@ -97,10 +102,21 @@ function love.load()
    mousePrototype:create()
 
    playerHealthBarPrototype:create(player.healthComponent)
+
+
+   local path = pathPrototype:create()
+   path:addLine(0, 100)
+   path:addLine(90, 100)
+   path:addLine(180, 100)
+   path:addLine(270, 100)
+   pather = patherPrototype:create(
+      player.positionComponent,
+      path
+   )
 end
 
 function love.draw()
-
+   pather:debugDraw()
    --
    love.graphics.setColor(255, 255, 255, 255)
    spriteSystem:draw()
@@ -115,9 +131,16 @@ function love.draw()
 end
 
 local function update(dt)
-   if inputController:isPressedThisFrame(1, "rightclick") then
+   if inputController:isDown(1, "rightclick") then
+      pather:stepThroughPath(50 * dt)
+   end
+--   if inputController:isPressedThisFrame(1, "rightclick") then
+--      pather:stepThroughPath(300)
+--   end
+   if inputController:isPressedThisFrame(1, "middleclick") then
+      pather:reset()
       --enemyPrototype:create(love.mouse.getX(), love.mouse.getY(), player.positionComponent)
-      enemySquadPrototype:create(love.mouse.getX(), love.mouse.getY(), 5)
+      --enemySquadPrototype:create(love.mouse.getX(), love.mouse.getY(), 5)
    end
    --
    updateSystem:update(dt)

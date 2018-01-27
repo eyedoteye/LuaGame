@@ -64,7 +64,7 @@ local function setInvincible(self, on, time)
    end
 end
 
-local blinkCooldown = 0.1
+local blinkCooldown = 0.15
 local function blink(self, dt)
    self.blinkTimer = self.blinkTimer - dt
    if self.blinkTimer <= 0 then

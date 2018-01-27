@@ -8,6 +8,7 @@ local rotationTools = require "rotationTools"
 
 local enemyPrototype = require "enemyPrototype"
 
+
 local enemySquadPrototype = {}
 
 local distanceBetweenEnemies = 32 + 4
@@ -29,7 +30,7 @@ local function delete(self)
 end
 
 local function update(self, dt)
-   if #self.enemies < self.enemyCount then
+   if #self.enemies < self.totalEnemyCount then
       if #self.enemies >= 1 then
          local lastEnemy = self.enemies[#self.enemies]
          local distance = getDistanceFromPointToPoint(
@@ -76,7 +77,7 @@ end
 function enemySquadPrototype.create(
    self,
    x, y,
-   enemyCount
+   enemyPaths
 )
    local squad = entityFactory:createEntity({
       positionComponent = componentFactory:createComponent(
@@ -101,7 +102,7 @@ function enemySquadPrototype.create(
    updateSystem:addEntity(squad)
    spriteSystem:addEntity(squad)
 
-   squad.enemyCount = enemyCount
+   squad.totalEnemyCount = #enemyPaths
    squad.enemies = {}
 
    return squad
