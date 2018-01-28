@@ -23,8 +23,8 @@ local function resolveCollision(self, other, data)
 end
 
 local function moveForward(self, dt)
-   local xDir = math.cos((self.rotationComponent.rotation - 90) * math.pi / 180)
-   local yDir = math.sin((self.rotationComponent.rotation - 90) * math.pi / 180)
+   local xDir = math.cos(self.rotationComponent.rotation * math.pi / 180)
+   local yDir = math.sin(self.rotationComponent.rotation * math.pi / 180)
    local moveSpeed = 200
    self.positionComponent.x = self.positionComponent.x + xDir * moveSpeed * dt
    self.positionComponent.y = self.positionComponent.y + yDir * moveSpeed * dt

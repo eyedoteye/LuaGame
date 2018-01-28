@@ -7,6 +7,8 @@ local collisionSystem = require "collisionSystem"
 local componentFactory = require "componentFactory"
 local entityFactory = require "entityFactory"
 
+local rotationTools = require "rotationTools"
+
 local playerFireballPrototype = require "playerFireballPrototype"
 
 local function processMovementInput(self, dt)
@@ -30,9 +32,10 @@ end
 
 local function processMouseMovementInput(self)
    local mouseX, mouseY = love.mouse.getPosition()
-   local xOffset = mouseX - self.positionComponent.x
-   local yOffset = mouseY - self.positionComponent.y
-   self.rotationComponent.rotation = math.atan2(xOffset, -yOffset) / math.pi * 180
+   self.rotationComponent.rotation = rotationTools:getRotationFromPointToPoint(
+      self.positionComponent.x, self.positionComponent.y,
+      mouseX, mouseY
+   )
 end
 
 local function shootFireball(self)

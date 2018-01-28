@@ -6,12 +6,11 @@ function rotationTools:getRotationFromPointToPoint(
 )
    local xOffset = x2 - x1
    local yOffset = y2 - y1
-   return math.atan2(xOffset, -yOffset) / math.pi * 180
+   return math.atan2(yOffset, xOffset) / math.pi * 180
 end
 
 function rotationTools:getVectorFromRotation(rotation)
-   -- Subtracting 90 degrees to compensate.
-   local radRotation = (rotation - 90) * math.pi / 180
+   local radRotation = rotation * math.pi / 180
    local xDir = math.cos(radRotation)
    local yDir = math.sin(radRotation)
    return xDir, yDir
